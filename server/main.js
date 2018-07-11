@@ -23,11 +23,12 @@ Router.route('/SubChainProtocolPool', {where: 'server'})
                 "message" : "invalid data"
             };
         } else {
-            SubChainProtocol.update(
-                {SubChainProtocolAddr : this.request.body.SubChainProtocolAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}
-                ,{SubChainProtocolAddr : this.request.body.SubChainProtocolAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}
-                ,true
-            );
+            var result = SubChainProtocol.find({SubChainProtocolAddr : this.request.body.SubChainProtocolAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}).count();
+
+            if(result === 0){
+                SubChainProtocol.insert({SubChainProtocolAddr : this.request.body.SubChainProtocolAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8});
+            }
+
             response = {
                 "error" : false,
                 "message" : "Subchain protocol address added."
@@ -73,11 +74,12 @@ Router.route('/VnodeProtocolBasePool', {where: 'server'})
                 "message" : "invalid data"
             };
         } else {
-            VnodeProtocolBase.update(
-                {VnodeProtocolBaseAddr : this.request.body.VnodeProtocolBaseAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}
-                ,{VnodeProtocolBaseAddr : this.request.body.VnodeProtocolBaseAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}
-                ,true
-            );
+            var result = VnodeProtocolBase.find({VnodeProtocolBaseAddr : this.request.body.VnodeProtocolBaseAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8}).count();
+
+            if(result === 0){
+                VnodeProtocolBase.insert({VnodeProtocolBaseAddr : this.request.body.VnodeProtocolBaseAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8});
+            }
+
             response = {
                 "error" : false,
                 "message" : "Vnode protocol base address added."
