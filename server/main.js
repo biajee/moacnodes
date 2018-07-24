@@ -79,6 +79,7 @@ Router.route('/VnodePool', {where: 'server'})
 Router.route('/SubChainProtocolPool', {where: 'server'})
     .get(function(){
         var response = SubChainProtocol.find({}, {fields:{ _id: 0 }}).fetch();
+        /////add scscount from public view of contract
         this.response.setHeader('Content-Type', 'application/json');
         this.response.end(JSON.stringify(response));
     })
