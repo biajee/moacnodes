@@ -6,7 +6,7 @@ import './subchainProtocolAddr.html';
 
 Template.SubChainProtocolAddrPool.onCreated(function (){
         Session.set('isSubChainProtocolAddrPoolReady', false);
-        HTTP.call('GET', 'http://127.0.0.1:3000/SubChainProtocolPool', {}, 
+        HTTP.call('GET', '/SubChainProtocolPool', {}, 
             function(error, response){
                 if (!error) {
                     Session.set('isSubChainProtocolAddrPoolReady', true);
@@ -17,7 +17,7 @@ Template.SubChainProtocolAddrPool.onCreated(function (){
 
 Template.SubChainProtocolAddrPool.helpers({
     subChainProtocolAddrCollection() {
-        while(Session.get('isSubChainProtocolAddrPoolReady')===false){ window.setTimeout(checkFlag, 100); }
+        while(Session.get('isSubChainProtocolAddrPoolReady')===false){ window.setTimeout(subChainProtocolAddrCollection, 100); }
         return Session.get('SubChainProtocolAddrPoolResult');
     },
     settings: function () {

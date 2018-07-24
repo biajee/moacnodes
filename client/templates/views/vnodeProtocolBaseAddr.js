@@ -6,19 +6,19 @@ import './vnodeProtocolBaseAddr.html';
 
 Template.VnodeProtocolBaseAddrPool.onCreated(function (){
     Session.set('isVnodeProtocolBaseAddrPoolReady', false);
-    HTTP.call('GET', 'http://127.0.0.1:3000/VnodeProtocolBasePool', {}, 
+    HTTP.call('GET', 'VnodeProtocolBasePool', {}, 
         function(error, response){
             if (!error) {
                 Session.set('isVnodeProtocolBaseAddrPoolReady', true);
-                Session.set('isVnodeProtocolBaseAddrPoolReadyResult', response.data);
+                Session.set('VnodeProtocolBaseAddrPoolReadyResult', response.data);
             }
         });
 });
 
 Template.VnodeProtocolBaseAddrPool.helpers({
     vnodeProtocolBaseAddrCollection() {
-        while(Session.get('isVnodeProtocolBaseAddrPoolReady')===false){ window.setTimeout(checkFlag, 100); }
-        return Session.get('isVnodeProtocolBaseAddrPoolReadyResult');
+        while(Session.get('isVnodeProtocolBaseAddrPoolReady')===false){ window.setTimeout(vnodeProtocolBaseAddrCollection, 100); }
+        return Session.get('VnodeProtocolBaseAddrPoolReadyResult');
     },
     settings: function () {
         return {

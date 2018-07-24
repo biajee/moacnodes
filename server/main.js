@@ -87,7 +87,7 @@ Router.route('/SubChainProtocolPool', {where: 'server'})
     .post(function(){
         var response;
         if(this.request.body.SubChainProtocolAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8 === undefined) {
-            console.log(this.request.body);
+            //console.log(this.request.body);
             response = {
                 "error" : true,
                 "message" : "invalid data"
@@ -138,7 +138,7 @@ Router.route('/VnodeProtocolBasePool', {where: 'server'})
     .post(function(){
         var response;
         if(this.request.body.VnodeProtocolBaseAddr_d9dfba965afcf22d124ba3d18b41f47317b98ca8 === undefined) {
-            console.log(this.request.body);
+            //console.log(this.request.body);
             response = {
                 "error" : true,
                 "message" : "invalid data"
@@ -166,9 +166,9 @@ Router.route('/VnodeProtocolBaseNode',{where: 'server'})
         var allData = VnodeProtocolBase.find().fetch();
         var randomNum = Math.floor(VnodeProtocolBase.find().count() * Math.random());
         var data = allData[randomNum];
-        console.log(randomNum);
-        console.log(allData);
-        console.log(data);
+        //console.log(randomNum);
+        //console.log(allData);
+        //console.log(data);
         if(data !== undefined) {
             response = data
         } else {

@@ -6,7 +6,7 @@ import './vnodeIP.html';
 
 Template.VnodeIPAddrPool.onCreated(function (){
     Session.set('isVnodeIPAddrPoolReady', false);
-    HTTP.call('GET', 'http://127.0.0.1:3000/VnodePool', {}, 
+    HTTP.call('GET', '/VnodePool', {}, 
         function(error, response){
             if (!error) {
                 Session.set('isVnodeIPAddrPoolReady', true);
@@ -17,7 +17,7 @@ Template.VnodeIPAddrPool.onCreated(function (){
 
 Template.VnodeIPAddrPool.helpers({
     vnodeIPAddrCollection() {
-        while(Session.get('isVnodeIPAddrPoolReady')===false){ window.setTimeout(checkFlag, 100); }
+        while(Session.get('isVnodeIPAddrPoolReady')===false){ window.setTimeout(vnodeIPAddrCollection, 100); }
         return Session.get('VnodeIPAddrPoolResult');
     },
     settings: function () {
