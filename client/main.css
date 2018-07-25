@@ -12,7 +12,7 @@ body {
 	height:100px;
 	padding-left:40px;
 	padding-right:25px;
-	background:#212121;
+	background:linear-gradient(to right, #212121, #bbb);
 	color: #fff;
 }
 .header.show,.header.active{
