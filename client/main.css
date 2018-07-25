@@ -2,3 +2,62 @@ body {
   padding: 10px;
   font-family: sans-serif;
 }
+
+.pa{position:absolute;}
+
+.header{
+	position:fixed;
+	left:0;top:0;right:0;
+	z-index:999;
+	height:100px;
+	padding-left:40px;
+	padding-right:25px;
+	background:#212121;
+}
+.header.show,.header.active{
+	background:rgba(255,255,255,.95);
+}
+.header .wrap{
+	min-width: 1300px;
+	width:auto;
+}
+
+.contents{
+	margin-top: 100px;
+}
+
+.icon{
+	display:inline-block;
+	background-image:url(../images/icon.png);
+	background-repeat:no-repeat;
+}
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5),
+(min-resolution: 192dpi) {
+	.footer-bg{
+		background:url(./images/footer_bg@2x.png) no-repeat 50% 100%;
+		background-size:cover;
+	}
+	.icon {
+		background-image:url(./images/icon@2x.png);
+		background-size: 720px auto;
+	}
+}
+.icon-logo{
+	width:169px;height:46px;
+	background-position:0px 0px;
+}
+.icon-logo2{
+	width:169px;height:46px;
+	background-position:0px -60px;
+}
+.icon-logo3{
+	width:57px;height:41px;
+	background-position:-180px 0px;
+}
+.icon-logo4{
+	width:90px;height:36px;
+	background-position:-560px -120px;
+}
