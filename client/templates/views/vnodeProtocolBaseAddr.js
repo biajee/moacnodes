@@ -6,7 +6,7 @@ import './vnodeProtocolBaseAddr.html';
 
 Template.VnodeProtocolBaseAddrPool.onCreated(function (){
     Session.set('isVnodeProtocolBaseAddrPoolReady', false);
-    HTTP.call('GET', 'VnodeProtocolBasePool', {}, 
+    HTTP.call('GET', 'http://nodes.moac.io:3000/VnodeProtocolBasePool', {}, 
         function(error, response){
             if (!error) {
                 Session.set('isVnodeProtocolBaseAddrPoolReady', true);

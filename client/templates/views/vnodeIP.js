@@ -6,7 +6,7 @@ import './vnodeIP.html';
 
 Template.VnodeIPAddrPool.onCreated(function (){
     Session.set('isVnodeIPAddrPoolReady', false);
-    HTTP.call('GET', '/VnodePool', {}, 
+    HTTP.call('GET', 'http://nodes.moac.io:3000/VnodePool', {}, 
         function(error, response){
             if (!error) {
                 Session.set('isVnodeIPAddrPoolReady', true);
