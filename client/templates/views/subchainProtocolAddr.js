@@ -26,10 +26,13 @@ Template.SubChainProtocolAddrPool.helpers({
             showFilter: false,
             showNavigation: 'auto',
             fields: [
-                { key: 'SubChainProtocolAddr', label: 'Sub Chain Protocol Address' },
+                { key: 'SubChainProtocolAddr', label: 'SubChain Protocol Address' },
+                { key: 'scsCount', label: 'Scs Count' }
             ],
             useFontAwesome: true,
             group: 'client'
         };
     }
+    
 });
+
