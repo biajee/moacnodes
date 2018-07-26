@@ -32,6 +32,29 @@ body {
 
 .contents{
 	margin-top: 100px;
+	text-align: left;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 3px;
+}
+
+tbody tr:nth-child(2n+1) {
+  background: #fff;
+}
+
+tbody tr:nth-child(2n+2) {
+  background: #ddd;
+}
+
+td, th {
+	padding-left: 1px;
+	padding-right: 8px;
+}
+
+thead tr {
+	background: #bbb;
 }
 
 .icon{
