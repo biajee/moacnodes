@@ -6,7 +6,7 @@ import './subchainProtocolAddr.html';
 
 Template.SubChainProtocolAddrPool.onCreated(function (){
         Session.set('isSubChainProtocolAddrPoolReady', false);
-        HTTP.call('GET', 'http://nodes.moac.io:3000/SubChainProtocolPool', {}, 
+        HTTP.call('GET', '/SubChainProtocolPool', {}, 
             function(error, response){
                 if (!error) {
                     Session.set('isSubChainProtocolAddrPoolReady', true);

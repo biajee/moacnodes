@@ -43,14 +43,7 @@ var getScsCount = function(data) {
 Router.route('/VnodePool', {where: 'server'})
     .get(function(){
         var vnodes = chain3.net.getVnodes();
-        // var vnodes = [  { nodeAddress: 'enode://6fb0e7577795d66a4cb0c839ccc6e8f9952233ca34000a5de4fa1a4bf74e7b558f569edaabe7f3e3b027f01cce93151c985f1ef5658c2aa069bef296b09cc36d@23.29.125.169:30333?servicecfgport=&beneficialaddress=0x0000000000000000000000000000000000000000',
-        //                 ip: '23.29.125.169',
-        //                 serviceCfgPort: '50061',
-        //                 beneficialAddress: '0x4e2cE50cC6C8C1228C6Cb70574c15C918b7c1666' },
-        //                 { nodeAddress: 'enode://e4315633324ca223443968c475aecd0586cc3a7f01a4a5de2dd312209f40f472fa3a223df496191995787b1ebbe77c42fc90048ef7e3826d78c7b66a5de18a14@24.19.168.22:30333?servicecfgport=:50062&beneficialaddress=0x4e2cE50cC6C8C1228C6Cb70574c15C918b7c1e60',
-        //                 ip: '24.19.168.22',
-        //                 serviceCfgPort: '50062',
-        //                 beneficialAddress: '0x4e2cE50cC6C8C1228C6Cb70574c15C918b7c1e60' } ] 
+        console.log("vnodes: ", vnodes);
 
         var result = _.map(vnodes, function(vnode)
                         { 
@@ -62,7 +55,11 @@ Router.route('/VnodePool', {where: 'server'})
                         }
                     );
 
+        console.log("result: ", vnodes);
+
         result = result.concat(Vnode.find({}, {fields:{ _id: 0 }}).fetch());
+
+        console.log("result: ", result)
         response = _.uniq(result, v => [v.ip, v.serviceCfgPort, v.beneficialAddress].join());
 
         this.response.setHeader('Content-Type', 'application/json');
