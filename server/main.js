@@ -130,7 +130,7 @@ Router.route('/SubChainProtocolPool', {where: 'server'})
     });
 
 // GET /SubChainProtocolNode - returns a random SubChainProtocolAddr from MongoDB collection.
-Router.route('/SubChainProtocolNode',{where: 'server'})
+Router.route('/SubChainProtocolAddr',{where: 'server'})
     .get(function(){
         var response;
         var allData = SubChainProtocol.find().fetch();
@@ -181,7 +181,7 @@ Router.route('/VnodeProtocolBasePool', {where: 'server'})
     });
 
 // GET /VnodeProtocolBaseNode - returns a random VnodeProtocolBaseAddr from MongoDB collection.
-Router.route('/VnodeProtocolBaseNode',{where: 'server'})
+Router.route('/VnodeProtocolBaseAddr',{where: 'server'})
     .get(function(){
         var response;
         var allData = VnodeProtocolBase.find().fetch();
