@@ -27,6 +27,8 @@ Template.SubChainProtocolAddrPool.helpers({
             showNavigation: 'auto',
             fields: [
                 { key: 'SubChainProtocolAddr', label: 'SubChain Protocol Address' },
+                { key: 'subChainProtocol', label: 'Protocol Name'},
+                { key: 'bondMin', label: 'Min Bond'},
                 { key: 'scsCount', label: 'Scs Count' }
             ],
             useFontAwesome: true,
