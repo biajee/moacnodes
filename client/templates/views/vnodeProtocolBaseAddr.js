@@ -24,15 +24,13 @@ Template.VnodeProtocolBaseAddrPool.helpers({
         return {
             rowsPerPage: 15,
             showFilter: false,
+            sortable: false,
             showNavigation: 'auto',
             fields: [
-                { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address' },
-                { key: 'bondMin', label: 'Min Bond'},
-                { key: 'vnodeCount', label: 'Vnode Count'},
-                { key: 'vnodeAddresses', label: 'Vnode IP/Port', cellClass: function (value, object) {
-                    var css = 'col-md2';
-                    
-                    return css;}}
+                { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address', sortable: false },
+                { key: 'bondMin', label: 'Min Bond', sortable: false},
+                { key: 'vnodeCount', label: 'Vnode Count', sortable: false},
+                { key: 'vnodeAddresses', label: 'Vnode IP/Port', sortable: false}
             ],
             useFontAwesome: true,
             group: 'client'

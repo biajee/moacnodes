@@ -52,37 +52,92 @@ var getSubChainProtoclBasePublicProperties = function(data) {
 };
 
 var getVnodeProtocolBasePublicProperties = function(data) {
+    console.log("test");
+    data = [];
+
     var newData = [];
     var len = data.length;
     var contractAbi = [ { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "vnodeList", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "vnode", "type": "address" }, { "name": "link", "type": "string" } ], "name": "register", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdrawRequest", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdraw", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "vnodeCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "PEDNING_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "randness", "type": "uint256" }, { "name": "nodecntbase", "type": "uint256" }, { "name": "i", "type": "uint256" } ], "name": "pickRandomVnode", "outputs": [ { "name": "target", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "bondMin", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_addr", "type": "address" } ], "name": "isPerforming", "outputs": [ { "name": "res", "type": "bool", "value": false } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "vnodeStore", "outputs": [ { "name": "from", "type": "address" }, { "name": "bond", "type": "uint256" }, { "name": "state", "type": "uint256" }, { "name": "registerBlock", "type": "uint256" }, { "name": "withdrawBlock", "type": "uint256" }, { "name": "link", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WITHDRAW_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "bmin", "type": "uint256", "index": 0, "typeShort": "uint", "bits": "256", "displayName": "bmin", "template": "elements_input_uint", "value": "2" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" } ];
 
-    for (var i=0; i<len; i++) {
+    //test only
+    // console.log("len", len);
+    var tempData = [];
+    if (len == 0) {
+        var row0 = {
+            VnodeProtocolBaseAddr: "0x0000000000000000000000000000000000000000",
+            bondMin: 1,
+            vnodeCount: 3,
+            // link: "35.231.146.5:50062,35.236.38.203:50062,35.236.37.203:50062,35.236.39.203:50062"
+        };
+        tempData.push(row0);
+        data = tempData;
+        len = data.length;
+    }
+
+    // console.log("len", len);
+    for (var i=len-1; i>-1; i--) {
         var contractAddress = data[i].VnodeProtocolBaseAddr;
         var item = {
             "VnodeProtocolBaseAddr": contractAddress
         };
         var contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
-        console.log(contractInstance);
+        // console.log(contractInstance);
         if (contractInstance) {
             var vnodeCount = contractInstance.vnodeCount().toNumber();
+            
+            //test
+            // var vnodeCount = 0;
+            // if (vnodeCount == 0) {
+            //     vnodeCount = 1;
+            // }
+            
             item.vnodeCount = vnodeCount;
             var bondMin = contractInstance.bondMin().toNumber();
+            // var bondMin = 1;
             item.bondMin = bondMin;
 
             var vnodeAddresses = [];
-            for (var i=0; i<vnodeCount; i++){
-                var vnodeStore = contractInstance.vnodeStore(i);
+            for (var i1=0; i1<vnodeCount; i1++){
+                var vnodeStore = contractInstance.vnodeStore(i1);
+                // var vnodeStore = ['','','','','',''];
                 var link = vnodeStore[5];
                 if(link===''){
-                    link = "***.***.***.***:*****"
+                    // link = "***.***.***.***:*****"
+                    //test
+                    link = "35.231.146.5:50062,35.236.38.203:50062,35.236.37.203:50062,35.236.39.203:50062";
                 }
-                vnodeAddresses.push(link);
+                var links = link.split(",");
+
+                // console.log("links", links);
+
+                for (var j=0; j<links.length; j++) {
+                    vnodeAddresses.push(links[j]);
+                }
+                // vnodeAddresses.push(link);
+            }
+            // console.log("vnodeAddresses", vnodeAddresses);
+
+            for (var k=0; k<vnodeAddresses.length; k++) {
+                if (k==0) {
+                    item.vnodeAddresses = vnodeAddresses[0];
+                    // items.push(item);
+                    newData.push(item);
+                } else {
+                    var newItem = {
+                        VnodeProtocolBaseAddr: '',
+                        bondMin: '',
+                        vnodeCount: '',
+                        vnodeAddresses: links[k]
+                    }
+                    newData.push(newItem);
+                }
             }
 
-            item.vnodeAddresses = vnodeAddresses;
+
+            // item.vnodeAddresses = vnodeAddresses;
         }
 
-        newData.push(item);
+        // newData.push(item);
     }
 
     return newData;
