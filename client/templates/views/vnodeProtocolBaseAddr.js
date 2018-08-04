@@ -28,7 +28,11 @@ Template.VnodeProtocolBaseAddrPool.helpers({
             fields: [
                 { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address' },
                 { key: 'bondMin', label: 'Min Bond'},
-                { key: 'vnodeCount', label: 'Vnode Count'}
+                { key: 'vnodeCount', label: 'Vnode Count'},
+                { key: 'vnodeAddresses', label: 'Vnode IP/Port', cellClass: function (value, object) {
+                    var css = 'col-md2';
+                    
+                    return css;}}
             ],
             useFontAwesome: true,
             group: 'client'

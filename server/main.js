@@ -62,11 +62,24 @@ var getVnodeProtocolBasePublicProperties = function(data) {
             "VnodeProtocolBaseAddr": contractAddress
         };
         var contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
+        console.log(contractInstance);
         if (contractInstance) {
             var vnodeCount = contractInstance.vnodeCount().toNumber();
             item.vnodeCount = vnodeCount;
             var bondMin = contractInstance.bondMin().toNumber();
             item.bondMin = bondMin;
+
+            var vnodeAddresses = [];
+            for (var i=0; i<vnodeCount; i++){
+                var vnodeStore = contractInstance.vnodeStore(i);
+                var link = vnodeStore[5];
+                if(link===''){
+                    link = "***.***.***.***:*****"
+                }
+                vnodeAddresses.push(link);
+            }
+
+            item.vnodeAddresses = vnodeAddresses;
         }
 
         newData.push(item);
