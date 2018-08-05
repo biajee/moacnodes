@@ -20,10 +20,12 @@ Meteor.startup(() => {
 var getSubChainProtoclBasePublicProperties = function(data) {
     var newData = [];
     var len = data.length;
+    // console.log("len: ", len);
     var contractAbi = [ { "constant": true, "inputs": [ { "name": "addr", "type": "address" } ], "name": "approvalAddresses", "outputs": [ { "name": "", "type": "address[]" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" } ], "name": "releaseFromSubchain", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "setSubchainActiveBlock", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdrawRequest", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdraw", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "addr", "type": "address" } ], "name": "approvalAmounts", "outputs": [ { "name": "", "type": "uint256[]" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" } ], "name": "register", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" }, { "name": "v", "type": "uint8" }, { "name": "r", "type": "bytes32" }, { "name": "s", "type": "bytes32" } ], "name": "approveBond", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" } ], "name": "forfeitBond", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "subChainLastActiveBlock", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "scsCount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "scsApprovalList", "outputs": [ { "name": "bondApproved", "type": "uint256" }, { "name": "bondedCount", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "PENDING_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "subchain", "type": "address" } ], "name": "releaseRequest", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "scsArray", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "blk", "type": "uint256" } ], "name": "setSubchainExpireBlock", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "subChainExpireBlock", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "scsList", "outputs": [ { "name": "from", "type": "address" }, { "name": "bond", "type": "uint256" }, { "name": "state", "type": "uint256" }, { "name": "registerBlock", "type": "uint256" }, { "name": "withdrawBlock", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "bondMin", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_addr", "type": "address" } ], "name": "isPerforming", "outputs": [ { "name": "res", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "thousandth", "type": "uint256" }, { "name": "minnum", "type": "uint256" } ], "name": "getSelectionTarget", "outputs": [ { "name": "target", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "targetnum", "type": "uint256" } ], "name": "getSelectionTargetByCount", "outputs": [ { "name": "target", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "subChainProtocol", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WITHDRAW_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "protocol", "type": "string", "index": 0, "typeShort": "string", "bits": "", "displayName": "protocol", "template": "elements_input_string", "value": "" }, { "name": "bmin", "type": "uint256", "index": 1, "typeShort": "uint", "bits": "256", "displayName": "bmin", "template": "elements_input_uint", "value": "" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "scs", "type": "address" } ], "name": "Registered", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "sender", "type": "address" } ], "name": "UnRegistered", "type": "event" } ];
     
     for (var i=0; i<len; i++) {
         var contractAddress = data[i].SubChainProtocolAddr;
+        // console.log("contractAddress: ", contractAddress);
         var item = {
             "SubChainProtocolAddr": contractAddress
         };
@@ -46,45 +48,52 @@ var getSubChainProtoclBasePublicProperties = function(data) {
             //show scs available fund
             //scsArray
             //scsList[scs].bond - scsApprovalList[scs].bondApproved
-            var scsAddresses = [];
-            var scsAvailableFunds = [];
-            for(var i=0; i<scsCount; i++){
-                var scsAddress = contractInstance.scsArray(i);
 
-                if(scsAddress !== '0x'){
-                    console.log('here');
-                    var bond = contractInstance.scsList[scsAddress].bond().toNumber();
-                    var bondApproved = contractInstance.scsList[scsAddress].bondApproved().toNumber();
-                    var scsAvailableFund = bond-bondApproved;
-
-                    scsAddresses.push(scsAddress);
-                    scsAvailableFunds.push(scsAvailableFund);
-                } 
-                else{
-                    scsAddresses.push("NA");
-                    scsAvailableFunds.push("N/A");
-                }
+            if(scsCount===0){
+                item.scsAddress = "N/A";
+                item.scsAvailableFund = "N/A";
+                newData.push(item);
             }
-
-            for (var k=0; k<scsCount; k++){
-                if(k==0){
-                    item.scsAddress = scsAddresses[k];
-                    item.scsAvailableFund = scsAvailableFunds[k];
-                    newData.push(item);
-                }
-                else{
-                    var newItem = {
-                        SubChainProtocolAddr: '',
-                        scsCount: '',
-                        subChainProtocol: '',
-                        bondMin: '',
-                        scsAddress: scsAddresses[k],
-                        scsAvailableFund: scsAvailableFunds[k]
+            else {
+                var scsAddresses = [];
+                var scsAvailableFunds = [];
+                for(var j=0; j<scsCount; j++){
+                    var scsAddress = contractInstance.scsArray(j);
+    
+                    if(scsAddress !== '0x'){
+                        var bond = contractInstance.scsList[scsAddress].bond().toNumber();
+                        var bondApproved = contractInstance.scsList[scsAddress].bondApproved().toNumber();
+                        var scsAvailableFund = bond-bondApproved;
+    
+                        scsAddresses.push(scsAddress);
+                        scsAvailableFunds.push(scsAvailableFund);
+                    } 
+                    else{
+                        scsAddresses.push("NA");
+                        scsAvailableFunds.push("N/A");
                     }
-
-                    newData.push(newItem);
                 }
-            }            
+    
+                for (var k=0; k<scsCount; k++){
+                    if(k==0){
+                        item.scsAddress = scsAddresses[k];
+                        item.scsAvailableFund = scsAvailableFunds[k];
+                        newData.push(item);
+                    }
+                    else{
+                        var newItem = {
+                            SubChainProtocolAddr: '',
+                            scsCount: '',
+                            subChainProtocol: '',
+                            bondMin: '',
+                            scsAddress: scsAddresses[k],
+                            scsAvailableFund: scsAvailableFunds[k]
+                        }
+    
+                        newData.push(newItem);
+                    }
+                }    
+            }        
         }
     }
     return newData;
@@ -199,9 +208,10 @@ Router.route('/VnodePool', {where: 'server'})
 Router.route('/SubChainProtocolPool', {where: 'server'})
     .get(function(){
         var subChainProtocols = SubChainProtocol.find({}, {fields:{ _id: 0 }}).fetch();
+        //console.log("subChainProtocols", subChainProtocols);
         var response = getSubChainProtoclBasePublicProperties(subChainProtocols);
         //console.log("response", response);
-        /////add scscount from public view of contract
+        //add scscount from public view of contract
         this.response.setHeader('Content-Type', 'application/json');
         this.response.end(JSON.stringify(response));
     })

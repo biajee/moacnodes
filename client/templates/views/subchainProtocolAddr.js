@@ -10,7 +10,7 @@ Template.SubChainProtocolAddrPool.onCreated(function (){
         function(error, response){
             if (!error) {
                 Session.set('isSubChainProtocolAddrPoolReady', true);
-                console.log(response.data);
+                //console.log(response.data);
                 Session.set('SubChainProtocolAddrPoolResult', response.data);
             }
         });
