@@ -155,13 +155,13 @@ var getVnodeProtocolBasePublicProperties = function(data) {
         //console.log(contractInstance);
         if (contractInstance) {
             var vnodeCount = contractInstance.vnodeCount().toNumber();
-            item.vnodeCount = vnodeCount;
+            item.vnodeCount = vnodeCount - 1;
             var bondMin = contractInstance.bondMin().toNumber();
             item.bondMin = bondMin;
 
             var vnodeAddresses = [];
-            for (var i=0; i<vnodeCount; i++){
-                var vnodeStore = contractInstance.vnodeStore(i);
+            for (var j=1; j<vnodeCount; j++){
+                var vnodeStore = contractInstance.vnodeStore(j);
                 var link = vnodeStore[5];
                 if(link===''){
                     link = "***.***.***.***:*****"
@@ -284,6 +284,35 @@ Router.route('/SubChainProtocolPool', {where: 'server'})
         this.response.end(JSON.stringify(response));
     });
 
+Router.route('/DeleteSubChainProtocol_d9dfba965afcf22d124ba3d18b41f47317b98ca8/:ProtocolAddr', {where: 'server'})
+    .delete(function(){
+        var response;
+        if(this.params.ProtocolAddr !== undefined) {
+            var data = SubChainProtocol.find({SubChainProtocolAddr : this.params.ProtocolAddr}).fetch();
+            console.log(data);
+            if(data.length >  0) {
+                if(SubChainProtocol.remove(data[0]._id) === 1) {
+                    response = {
+                        "error" : false,
+                        "message" : "Protocol addresses deleted."
+                    }
+                } else {
+                    response = {
+                        "error" : true,
+                        "message" : "Protocol addresses not deleted."
+                    }
+                }
+            } else {
+                response = {
+                    "error" : true,
+                    "message" : "Protocol addresses not found."
+                }
+            }
+        }
+        this.response.setHeader('Content-Type','application/json');
+        this.response.end(JSON.stringify(response));
+    });
+
 // GET /SubChainProtocolNode - returns a random SubChainProtocolAddr from MongoDB collection.
 Router.route('/SubChainProtocolAddr',{where: 'server'})
     .get(function(){
@@ -332,6 +361,35 @@ Router.route('/VnodeProtocolBasePool', {where: 'server'})
             response = {
                 "error" : false,
                 "message" : "Vnode protocol base address added."
+            }
+        }
+        this.response.setHeader('Content-Type','application/json');
+        this.response.end(JSON.stringify(response));
+    });
+
+Router.route('/DeleteVnodeProtocol_d9dfba965afcf22d124ba3d18b41f47317b98ca8/:ProtocolAddr', {where: 'server'})
+    .delete(function(){
+        var response;
+        if(this.params.ProtocolAddr !== undefined) {
+            var data = VnodeProtocolBase.find({VnodeProtocolBaseAddr : this.params.ProtocolAddr}).fetch();
+            console.log(data);
+            if(data.length >  0) {
+                if(VnodeProtocolBase.remove(data[0]._id) === 1) {
+                    response = {
+                        "error" : false,
+                        "message" : "Protocol addresses deleted."
+                    }
+                } else {
+                    response = {
+                        "error" : true,
+                        "message" : "Protocol addresses not deleted."
+                    }
+                }
+            } else {
+                response = {
+                    "error" : true,
+                    "message" : "Protocol addresses not found."
+                }
             }
         }
         this.response.setHeader('Content-Type','application/json');
