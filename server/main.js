@@ -92,7 +92,10 @@ var getSubChainProtoclBasePublicProperties = function(data) {
                         newData.push(newItem);
                     }
                 }    
-            }        
+            }  
+            else {
+                newData.push(item);
+            }      
         }
     }
     return newData;
