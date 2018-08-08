@@ -27,7 +27,8 @@ Template.VnodeProtocolBaseAddrPool.helpers({
             sortable: false,
             showNavigation: 'auto',
             fields: [
-                { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address', sortable: false },
+                { key: 'id', label: 'id', sortOrder: 0, sortDirection: 'ascending', hidden: true},
+                { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address', sortOrder: 1, sortDirection: 'descending' ,sortable: false },
                 { key: 'bondMin', label: 'Min Bond', sortable: false},
                 { key: 'vnodeCount', label: 'Vnode Count', sortable: false},
                 { key: 'vnodeAddresses', label: 'Vnode IP/Port', sortable: false}

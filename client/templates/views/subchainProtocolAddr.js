@@ -28,15 +28,15 @@ Template.SubChainProtocolAddrPool.helpers({
             sortable: false,
             showNavigation: 'auto',
             fields: [
-                { key: 'SubChainProtocolAddr', label: 'MicroChain Protocol Address', sortable: false },
+                { key: 'id', label: 'id', sortOrder: 0, sortDirection: 'ascending', hidden: true},
+                { key: 'SubChainProtocolAddr', label: 'MicroChain Protocol Address', sortOrder: 1, sortDirection: 'descending' ,sortable: false},
                 { key: 'subChainProtocol', label: 'Protocol Name', sortable: false },
                 { key: 'bondMin', label: 'Min Bond', sortable: false },
                 { key: 'scsCount', label: 'SCS Count', sortable: false },
-                { key: 'scsAddress', label: 'SCS Address', sortable: false },
+                // { key: 'scsAddress', label: 'SCS Address', sortable: false },
                 { key: 'scsAvailableFund', label: 'SCS Available Fund', sortable: false }
             ],
-            useFontAwesome: true,
-            group: 'client'
+            useFontAwesome: true
         };
     }
     

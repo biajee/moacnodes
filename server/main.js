@@ -45,48 +45,47 @@ var getSubChainProtoclBasePublicProperties = function(data) {
             var bondMin = contractInstance.bondMin().toNumber();
             item.bondMin = bondMin
 
-            //show scs available fund
-            //scsArray
-            //scsList[scs].bond - scsApprovalList[scs].bondApproved
-
-            if(scsCount===0){
-                item.scsAddress = "N/A";
-                item.scsAvailableFund = "N/A";
-                newData.push(item);
-            }
-            else {
-                var scsAddresses = [];
-                var scsAvailableFunds = [];
+            var scsAddresses = [];
+            var scsAvailableFunds = [];
+            if(scsCount!==0){
                 for(var j=0; j<scsCount; j++){
                     var scsAddress = contractInstance.scsArray(j);
     
                     if(scsAddress !== '0x'){
-                        var bond = contractInstance.scsList[scsAddress].bond().toNumber();
-                        var bondApproved = contractInstance.scsList[scsAddress].bondApproved().toNumber();
-                        var scsAvailableFund = bond-bondApproved;
+                        var scs = contractInstance.scsList(scsAddress);
+                        var scsApproval = contractInstance.scsApprovalList(scsAddress);
+
+                        var bond = scs[1];
+                        var bondNumber = bond.toNumber();
+                        var bondApproved = scsApproval[0];
+                        var bondApprovedNumber = bondApproved.toNumber();
+
+                        var scsAvailableFund = (bondNumber-bondApprovedNumber)/1e18;
     
                         scsAddresses.push(scsAddress);
                         scsAvailableFunds.push(scsAvailableFund);
                     } 
                     else{
-                        scsAddresses.push("NA");
+                        scsAddresses.push("N/A");
                         scsAvailableFunds.push("N/A");
                     }
                 }
     
                 for (var k=0; k<scsCount; k++){
-                    if(k==0){
-                        item.scsAddress = scsAddresses[k];
+                    if(k===0){
+                        item.id = i;
+                        //item.scsAddress = scsAddresses[k];
                         item.scsAvailableFund = scsAvailableFunds[k];
                         newData.push(item);
                     }
                     else{
                         var newItem = {
-                            SubChainProtocolAddr: '',
-                            scsCount: '',
-                            subChainProtocol: '',
-                            bondMin: '',
-                            scsAddress: scsAddresses[k],
+                            id: i,
+                            SubChainProtocolAddr: ' ',
+                            scsCount: ' ',
+                            subChainProtocol: ' ',
+                            bondMin: ' ',
+                            //scsAddress: scsAddresses[k],
                             scsAvailableFund: scsAvailableFunds[k]
                         }
     
@@ -98,6 +97,49 @@ var getSubChainProtoclBasePublicProperties = function(data) {
     }
     return newData;
 };
+
+var getSCSAvailableFundBySubChainProtocol = function(SubChainProtocolAddr, SCSAddr){
+    var newData = [];
+    // console.log("len: ", len);
+    var contractAbi = [ { "constant": true, "inputs": [ { "name": "addr", "type": "address" } ], "name": "approvalAddresses", "outputs": [ { "name": "", "type": "address[]" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" } ], "name": "releaseFromSubchain", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "setSubchainActiveBlock", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdrawRequest", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdraw", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "addr", "type": "address" } ], "name": "approvalAmounts", "outputs": [ { "name": "", "type": "uint256[]" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" } ], "name": "register", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" }, { "name": "v", "type": "uint8" }, { "name": "r", "type": "bytes32" }, { "name": "s", "type": "bytes32" } ], "name": "approveBond", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "amount", "type": "uint256" } ], "name": "forfeitBond", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "subChainLastActiveBlock", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "scsCount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "scsApprovalList", "outputs": [ { "name": "bondApproved", "type": "uint256" }, { "name": "bondedCount", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "PENDING_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "scs", "type": "address" }, { "name": "subchain", "type": "address" } ], "name": "releaseRequest", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "scsArray", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "blk", "type": "uint256" } ], "name": "setSubchainExpireBlock", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "subChainExpireBlock", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "scsList", "outputs": [ { "name": "from", "type": "address" }, { "name": "bond", "type": "uint256" }, { "name": "state", "type": "uint256" }, { "name": "registerBlock", "type": "uint256" }, { "name": "withdrawBlock", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "bondMin", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_addr", "type": "address" } ], "name": "isPerforming", "outputs": [ { "name": "res", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "thousandth", "type": "uint256" }, { "name": "minnum", "type": "uint256" } ], "name": "getSelectionTarget", "outputs": [ { "name": "target", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "targetnum", "type": "uint256" } ], "name": "getSelectionTargetByCount", "outputs": [ { "name": "target", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "subChainProtocol", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WITHDRAW_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "protocol", "type": "string", "index": 0, "typeShort": "string", "bits": "", "displayName": "protocol", "template": "elements_input_string", "value": "" }, { "name": "bmin", "type": "uint256", "index": 1, "typeShort": "uint", "bits": "256", "displayName": "bmin", "template": "elements_input_uint", "value": "" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "scs", "type": "address" } ], "name": "Registered", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "sender", "type": "address" } ], "name": "UnRegistered", "type": "event" } ];
+    
+    var item = {
+        "SubChainProtocolAddr": SubChainProtocolAddr
+        ,"SCSAddr": SCSAddr
+    };
+    var contractInstance = chain3.mc.contract(contractAbi).at(SubChainProtocolAddr);
+    if (contractInstance) {
+        var scsCount = contractInstance.scsCount().toNumber();
+        item.scsCount = scsCount;
+
+        var scsAddresses = [];
+        var scsAvailableFunds = [];
+        if(scsCount!==0){
+            for(var j=0; j<scsCount; j++){
+                var scsAddress = contractInstance.scsArray(j);
+
+                if(scsAddress === item.SCSAddr){
+                    var scs = contractInstance.scsList(scsAddress);
+                    var scsApproval = contractInstance.scsApprovalList(scsAddress);
+
+                    var bond = scs[1];
+                    var bondNumber = bond.toNumber();
+                    var bondApproved = scsApproval[0];
+                    var bondApprovedNumber = bondApproved.toNumber();
+
+                    var scsAvailableFund = (bondNumber-bondApprovedNumber)/1e18;
+
+                    return {
+                        "SubChainProtocolAddr": SubChainProtocolAddr
+                        ,"SCSAddr": SCSAddr
+                        ,"AvailableFund": scsAvailableFund
+                    };
+                } 
+            }
+        }        
+    }
+    return newData;
+}
 
 var getVnodeProtocolBasePublicProperties = function(data) {
     var newData = [];
@@ -128,12 +170,14 @@ var getVnodeProtocolBasePublicProperties = function(data) {
             }
             
             for (var k=0; k<vnodeAddresses.length; k++){
-                if(k==0){
+                if(k===0){
+                    item.id = i;
                     item.vnodeAddresses = vnodeAddresses[k];
                     newData.push(item);
                 }
                 else{
                     var newItem = {
+                        id: i,
                         VnodeProtocolBaseAddr: '',
                         bondMin: '',
                         vnodeCount: '',
@@ -314,4 +358,20 @@ Router.route('/VnodeProtocolBaseAddr',{where: 'server'})
         }
         this.response.setHeader('Content-Type','application/json');
         this.response.end(JSON.stringify(response));
+    });
+
+
+// GET /ScsAvailableFund - returns available fund for scs address.
+Router.route('/SCSAvailableFund/ProtocolAddr/:ProtocolAddr/SCSAddr/:SCSAddr', {where: 'server'})
+    .get(function(){
+        var protocolAddr = this.params.ProtocolAddr;
+        var scsAddr = this.params.SCSAddr;
+
+        var subChainProtocol = SubChainProtocol.find({}, {fields:{ SubChainProtocolAddr: protocolAddr}}).fetch();
+        console.log("subChainProtocols", subChainProtocol);
+        
+        var result = getSCSAvailableFundBySubChainProtocol(protocolAddr, scsAddr);
+        
+        this.response.setHeader('Content-Type', 'application/json');
+        this.response.end(JSON.stringify(result));
     });
