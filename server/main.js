@@ -47,6 +47,7 @@ var getSubChainProtoclBasePublicProperties = function(data) {
 
             var scsAddresses = [];
             var scsAvailableFunds = [];
+            var scsIsPerforming = [];
             if(scsCount!==0){
                 for(var j=0; j<scsCount; j++){
                     var scsAddress = contractInstance.scsArray(j);
@@ -57,17 +58,22 @@ var getSubChainProtoclBasePublicProperties = function(data) {
 
                         var bond = scs[1];
                         var bondNumber = bond.toNumber();
+
                         var bondApproved = scsApproval[0];
                         var bondApprovedNumber = bondApproved.toNumber();
-
                         var scsAvailableFund = (bondNumber-bondApprovedNumber)/1e18;
+
+
+                        var isPerforming = contractInstance.isPerforming(scsAddress);
     
-                        scsAddresses.push(scsAddress);
+                        //scsAddresses.push(scsAddress);
                         scsAvailableFunds.push(scsAvailableFund);
+                        scsIsPerforming.push(isPerforming);
                     } 
                     else{
-                        scsAddresses.push("N/A");
+                        //scsAddresses.push("N/A");
                         scsAvailableFunds.push("N/A");
+                        scsIsPerforming.push("N/A");
                     }
                 }
     
@@ -76,6 +82,7 @@ var getSubChainProtoclBasePublicProperties = function(data) {
                         item.id = i;
                         //item.scsAddress = scsAddresses[k];
                         item.scsAvailableFund = scsAvailableFunds[k];
+                        item.scsIsPerforming = scsIsPerforming[k];
                         newData.push(item);
                     }
                     else{
@@ -86,7 +93,8 @@ var getSubChainProtoclBasePublicProperties = function(data) {
                             subChainProtocol: ' ',
                             bondMin: ' ',
                             //scsAddress: scsAddresses[k],
-                            scsAvailableFund: scsAvailableFunds[k]
+                            scsAvailableFund: scsAvailableFunds[k],
+                            scsIsPerforming: scsIsPerforming[k]
                         }
     
                         newData.push(newItem);

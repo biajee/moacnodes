@@ -34,7 +34,8 @@ Template.SubChainProtocolAddrPool.helpers({
                 { key: 'bondMin', label: 'Min Bond', sortable: false },
                 { key: 'scsCount', label: 'SCS Count', sortable: false },
                 // { key: 'scsAddress', label: 'SCS Address', sortable: false },
-                { key: 'scsAvailableFund', label: 'SCS Available Fund', sortable: false }
+                { key: 'scsAvailableFund', label: 'SCS Available Fund', sortable: false },
+                { key: 'scsIsPerforming', label: 'Performing', sortable: false }
             ],
             useFontAwesome: true
         };
