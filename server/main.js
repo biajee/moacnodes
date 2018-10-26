@@ -204,6 +204,34 @@ var getVnodeProtocolBasePublicProperties = function(data) {
     return newData;
 };
 
+var getVnodeInfo = function(contractAddress) {
+    var contractAbi = [ { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "vnodeList", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "vnode", "type": "address" }, { "name": "link", "type": "string" } ], "name": "register", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdrawRequest", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdraw", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "vnodeCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "PEDNING_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "randness", "type": "uint256" }, { "name": "nodecntbase", "type": "uint256" }, { "name": "i", "type": "uint256" } ], "name": "pickRandomVnode", "outputs": [ { "name": "target", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "bondMin", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_addr", "type": "address" } ], "name": "isPerforming", "outputs": [ { "name": "res", "type": "bool", "value": false } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "vnodeStore", "outputs": [ { "name": "from", "type": "address" }, { "name": "bond", "type": "uint256" }, { "name": "state", "type": "uint256" }, { "name": "registerBlock", "type": "uint256" }, { "name": "withdrawBlock", "type": "uint256" }, { "name": "link", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WITHDRAW_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "bmin", "type": "uint256", "index": 0, "typeShort": "uint", "bits": "256", "displayName": "bmin", "template": "elements_input_uint", "value": "2" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" } ];
+//    for (var i=0; i<len; i++) {
+        // var contractAddress = data[i].VnodeProtocolBaseAddr;
+    var contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
+    //console.log(contractInstance);
+    if (contractInstance) {
+        var vnodeCount = contractInstance.vnodeCount().toNumber();
+
+        var vnodeInfo = [];
+        for (var j=1; j<vnodeCount; j++){
+            var vnodeStore = contractInstance.vnodeStore(j);
+            var via = vnodeStore[0];
+            var link = vnodeStore[5];
+            if(link!==''){
+                var newItem = {
+                    via: via,
+                    VnodeAddress: link
+                }
+                vnodeInfo.push(newItem);
+            }
+        }
+        
+        return vnodeInfo;
+    }
+//    }
+};
+
 // GET /VnodePool - merge every Vnode information from MongoDB collection and Chain3 result.
 Router.route('/VnodePool', {where: 'server'})
     .get(function(){
@@ -429,6 +457,22 @@ Router.route('/VnodeProtocolBaseAddr',{where: 'server'})
         this.response.end(JSON.stringify(response));
     });
 
+// GET /VnodeAddr - returns a random Vnode base on VnodeProtocolBaseAddr from MongoDB collection.
+Router.route('/VnodeAddr/:VnodeProtocolBaseAddr',{where: 'server'})
+    .get(function(){
+        var protocolAddr = this.params.VnodeProtocolBaseAddr;
+        var data = getVnodeInfo(protocolAddr);
+        if(data !== undefined) {
+            response = data;
+        } else {
+            response = {
+                "error" : true,
+                "message" : "Vnode protocol base not found."
+            }
+        }
+        this.response.setHeader('Content-Type','application/json');
+        this.response.end(JSON.stringify(response));
+    });
 
 // GET /ScsAvailableFund - returns available fund for scs address.
 Router.route('/SCSAvailableFund/ProtocolAddr/:ProtocolAddr/SCSAddr/:SCSAddr', {where: 'server'})
