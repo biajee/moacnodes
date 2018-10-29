@@ -204,32 +204,124 @@ var getVnodeProtocolBasePublicProperties = function(data) {
     return newData;
 };
 
-var getVnodeInfo = function(contractAddress) {
+var getVnodeInfo = function(vnodeProtocolBaseAddress) {
     var contractAbi = [ { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "vnodeList", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "vnode", "type": "address" }, { "name": "link", "type": "string" } ], "name": "register", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdrawRequest", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "withdraw", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "vnodeCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "PEDNING_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "randness", "type": "uint256" }, { "name": "nodecntbase", "type": "uint256" }, { "name": "i", "type": "uint256" } ], "name": "pickRandomVnode", "outputs": [ { "name": "target", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "bondMin", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_addr", "type": "address" } ], "name": "isPerforming", "outputs": [ { "name": "res", "type": "bool", "value": false } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "vnodeStore", "outputs": [ { "name": "from", "type": "address" }, { "name": "bond", "type": "uint256" }, { "name": "state", "type": "uint256" }, { "name": "registerBlock", "type": "uint256" }, { "name": "withdrawBlock", "type": "uint256" }, { "name": "link", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WITHDRAW_BLOCK_DELAY", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "bmin", "type": "uint256", "index": 0, "typeShort": "uint", "bits": "256", "displayName": "bmin", "template": "elements_input_uint", "value": "2" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" } ];
-//    for (var i=0; i<len; i++) {
-        // var contractAddress = data[i].VnodeProtocolBaseAddr;
-    var contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
-    //console.log(contractInstance);
-    if (contractInstance) {
-        var vnodeCount = contractInstance.vnodeCount().toNumber();
+    var contractInstance = chain3.mc.contract(contractAbi).at(vnodeProtocolBaseAddress);
 
+    if (contractInstance) {
+        var index = 0;
+        var vnodeStores;
         var vnodeInfo = [];
-        for (var j=1; j<vnodeCount; j++){
-            var vnodeStore = contractInstance.vnodeStore(j);
-            var via = vnodeStore[0];
-            var link = vnodeStore[5];
-            if(link!==''){
+
+        while(true){
+            try{
+                var vnodeStores = contractInstance.vnodeStore(index);
+                var via = vnodeStores[0];
+                var vnodeAddr = vnodeStores[5];
+
                 var newItem = {
                     via: via,
-                    VnodeAddress: link
+                    VnodeAddress: vnodeAddr
                 }
-                vnodeInfo.push(newItem);
+
+                if (vnodeAddr !== ""){
+                    vnodeInfo.push(newItem);
+                }
             }
+            catch(e){
+                break;
+            }
+
+            index ++;
         }
-        
+
         return vnodeInfo;
     }
-//    }
+};
+
+var getMonitorInfo = function(subChainBaseAddress) {
+    var contractAbi = [{ "constant": true, "inputs": [], "name": "maxMember", "outputs": [ { "name": "", "type": "uint256" } ], 
+                        "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "index", "type": "uint256" } ], 
+                        "name": "requestRelease", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, 
+                        { "constant": true, "inputs": [], "name": "blockReward", "outputs": [ { "name": "", "type": "uint256" } ], 
+                        "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "recv", "type": "address" }, 
+                        { "name": "amount", "type": "uint256" } ], "name": "withdrawTokenMoac", "outputs": [], "payable": false, "stateMutability": "nonpayable", 
+                        "type": "function" }, { "constant": false, "inputs": [ { "name": "index", "type": "uint256" } ], "name": "removeSyncNode", "outputs": [], 
+                        "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "amount", "type": "uint256" } ], 
+                        "name": "sellMintToken", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, 
+                        { "constant": false, "inputs": [ { "name": "addr", "type": "address" } ], "name": "setToken", "outputs": [], 
+                        "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "BALANCE", 
+                        "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, 
+                        { "constant": true, "inputs": [ { "name": "userAddr", "type": "address" } ], "name": "getEnteringAmount", 
+                        "outputs": [ { "name": "enteringAmt", "type": "uint256[]" }, { "name": "enteringtime", "type": "uint256[]" } ], "payable": false, 
+                        "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "nodeList", 
+                        "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, 
+                        { "constant": true, "inputs": [], "name": "getMonitorInfo", "outputs": [ { "name": "", "type": "address[]" }, { "name": "", "type": "string[]" } ], 
+                        "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getVnodeSimInfo", 
+                        "outputs": [ { "components": [ { "name": "protocol", "type": "address" }, { "name": "minMember", "type": "uint256" }, { "name": "maxMember", 
+                        "type": "uint256" }, { "name": "curFlushIndex", "type": "uint256" }, { "name": "lastFlushBlk", "type": "uint256" }, { "name": "proposalHashApprovedLast", 
+                        "type": "bytes32" }, { "name": "blockReward", "type": "uint256" }, { "name": "txReward", "type": "uint256" }, { "name": "viaReward", "type": "uint256" }, 
+                        { "name": "proposalExpiration", "type": "uint256" }, { "name": "VnodeProtocolBaseAddr", "type": "address" }, { "name": "penaltyBond", "type": "uint256" }, 
+                        { "name": "subchainstatus", "type": "uint256" }, { "name": "owner", "type": "address" }, { "name": "BALANCE", "type": "uint256" }, { "name": "nodeList", 
+                        "type": "address[]" }, { "name": "nodesToJoin", "type": "address[]" } ], "name": "", "type": "tuple" } ], "payable": false, "stateMutability": "view", 
+                        "type": "function" }, { "constant": true, "inputs": [], "name": "nodeToReleaseCount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, 
+                        "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "scsBeneficiary", 
+                        "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], 
+                        "name": "minMember", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, 
+                        { "constant": true, "inputs": [], "name": "funcCode", "outputs": [ { "name": "", "type": "bytes" } ], "payable": false, "stateMutability": "view", 
+                        "type": "function" }, { "constant": true, "inputs": [], "name": "consensusFlag", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, 
+                        "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "index", "type": "uint256" } ], "name": "BackupUpToDate", 
+                        "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "bytes32" } ], 
+                        "name": "proposals", "outputs": [ { "name": "proposedBy", "type": "address" }, { "name": "lastApproved", "type": "bytes32" }, { "name": "hash", 
+                        "type": "bytes32" }, { "name": "start", "type": "uint256" }, { "name": "end", "type": "uint256" }, { "name": "flag", "type": "uint256" }, 
+                        { "name": "startingBlock", "type": "uint256" }, { "name": "votecount", "type": "uint256" }, { "name": "distributeFlag", "type": "uint256" } ], 
+                        "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], 
+                        "name": "nodesToDispel", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, 
+                        { "constant": false, "inputs": [], "name": "setOwner", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, 
+                        { "constant": false, "inputs": [], "name": "close", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, 
+                        { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "monitors", "outputs": [ { "name": "from", "type": "address" }, 
+                        { "name": "bond", "type": "uint256" }, { "name": "link", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, 
+                        { "constant": true, "inputs": [], "name": "txReward", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", 
+                        "type": "function" }, { "constant": false, "inputs": [ { "name": "monitor", "type": "address" }, { "name": "link", "type": "string" } ], 
+                        "name": "registerAsMonitor", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, 
+                        "inputs": [ { "name": "scs", "type": "address" } ], "name": "getSCSRole", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, 
+                        "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "nodesWatching", 
+                        "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, 
+                        "inputs": [], "name": "registerOpen", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, 
+                        "inputs": [], "name": "rebuildFromLastFlushPoint", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, 
+                        { "constant": false, "inputs": [], "name": "registerClose", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, 
+                        "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "currentRefundGas", 
+                        "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], 
+                        "name": "buyMintToken", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [], "name": "nodeCount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "id", "type": "address" }, { "name": "link", "type": "string" } ], "name": "addSyncNode", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "AUTO_RETIRE", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "hash", "type": "bytes32" } ], "name": "requestDistributeAction", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [], "name": "penaltyBond", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "indexInlist", "type": "uint256" }, { "name": "hashlist", "type": "bytes32[]" }, { "name": "blocknum", "type": "uint256[]" }, { "name": "distAmount", "type": "uint256[]" }, { "name": "badactors", "type": "uint256[]" }, { "name": "viaNodeAddress", "type": "address[]" }, { "name": "viaNodeAmount", "type": "uint256[]" }, { "name": "ercAddress", "type": "address[]" }, { "name": "ercAmount", "type": "uint256[]" } ], "name": "createProposal", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "protocol", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MONITOR_JOIN_FEE", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "beneficiary", "type": "address" }, { "name": "v", "type": "uint8" }, { "name": "r", "type": "bytes32" }, { "name": "s", "type": "bytes32" } ], "name": "registerAsSCS", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "beneficiary", "type": "address" }, { "name": "v", "type": "uint8" }, { "name": "r", "type": "bytes32" }, { "name": "s", "type": "bytes32" } ], "name": "registerAsBackup", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "tokenAddress", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], "name": "addFund", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [], "name": "contractNeedFund", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "nodesToJoin", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "nodePerformance", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "viaReward", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "addr", "type": "address" }, { "name": "index1", "type": "uint8" }, { "name": "index2", "type": "uint8" } ], "name": "matchSelTarget", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "nodeToAdd", "type": "uint256" } ], "name": "registerAdd", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "indexInlist", "type": "uint256" }, { "name": "hash", "type": "bytes32" } ], "name": "voteOnProposal", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_DELETE_NUM", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "syncNodes", "outputs": [ { "name": "nodeId", "type": "address" }, { "name": "link", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getFlushInfo", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "index", "type": "uint256" } ], "name": "getEstFlushBlock", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "syncReward", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "hash", "type": "bytes32" } ], "name": "checkProposalStatus", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "types", "type": "uint256" } ], "name": "getProposal", "outputs": [ { "components": [ { "name": "proposedBy", "type": "address" }, { "name": "lastApproved", "type": "bytes32" }, { "name": "hash", "type": "bytes32" }, { "name": "start", "type": "uint256" }, { "name": "end", "type": "uint256" }, { "name": "distributionAmount", "type": "uint256[]" }, { "name": "flag", "type": "uint256" }, { "name": "startingBlock", "type": "uint256" }, { "name": "voters", "type": "uint256[]" }, { "name": "votecount", "type": "uint256" }, { "name": "badActors", "type": "uint256[]" }, { "name": "viaNodeAddress", "type": "address[]" }, { "name": "viaNodeAmount", "type": "uint256[]" }, { "name": "ercAddress", "type": "address[]" }, { "name": "ercAmount", "type": "uint256[]" }, { "name": "userAddr", "type": "address[]" }, { "name": "amount", "type": "uint256[]" }, { "name": "minerAddr", "type": "address[]" }, { "name": "distributeFlag", "type": "uint256" } ], "name": "", "type": "tuple" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "proposalHashInProgress", "outputs": [ { "name": "", "type": "bytes32" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "nodesToRelease", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "randIndex", "outputs": [ { "name": "", "type": "uint8" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "indexInlist", "type": "uint256" }, { "name": "hash", "type": "bytes32" } ], "name": "requestProposalAction", "outputs": [ { "name": "", "type": "bool" } ], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [ { "name": "addr", "type": "address" } ], "name": "isMemberValid", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "joinCntNow", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "AUTO_RETIRE_COUNT", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "selTarget", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], "name": "reset", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "proposalHashApprovedLast", "outputs": [ { "name": "", "type": "bytes32" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "NODE_INIT_PERFORMANCE", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "VnodeProtocolBaseAddr", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "holdingPoolPos", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "monitor", "type": "address" } ], "name": "removeMonitorInfo", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_GAS_PRICE", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "joinCntMax", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "proposalExpiration", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "DEFLATOR_VALUE", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MONITOR_MIN_FEE", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [ { "name": "recv", "type": "address" }, { "name": "amount", "type": "uint256" } ], "name": "withdraw", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [ { "name": "amount", "type": "uint256" } ], "name": "requestEnterMicrochain", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "flushInRound", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_USERADDR_TO_SUBCHAIN", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [ { "name": "proto", "type": "address", "index": 0, "typeShort": "address", "bits": "", "displayName": "proto", "template": "elements_input_address", "value": "" }, { "name": "vnodeProtocolBaseAddr", "type": "address", "index": 1, "typeShort": "address", "bits": "", "displayName": "vnode Protocol Base Addr", "template": "elements_input_address", "value": "" }, { "name": "min", "type": "uint256", "index": 2, "typeShort": "uint", "bits": "256", "displayName": "min", "template": "elements_input_uint", "value": "" }, { "name": "max", "type": "uint256", "index": 3, "typeShort": "uint", "bits": "256", "displayName": "max", "template": "elements_input_uint", "value": "" }, { "name": "thousandth", "type": "uint256", "index": 4, "typeShort": "uint", "bits": "256", "displayName": "thousandth", "template": "elements_input_uint", "value": "" }, { "name": "flushRound", "type": "uint256", "index": 5, "typeShort": "uint", "bits": "256", "displayName": "flush Round", "template": "elements_input_uint", "value": "" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "message", "type": "string" } ], "name": "ReportStatus", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "addr", "type": "address" }, { "indexed": false, "name": "amount", "type": "uint256" } ], "name": "TransferAmount", "type": "event" } ];
+    var contractInstance = chain3.mc.contract(contractAbi).at(subChainBaseAddress);
+
+    if (contractInstance) {
+        var index = 0;
+        var monitors;
+        var monitorInfo = [];
+
+        while(true){
+            try{
+                monitors = contractInstance.monitors(index);
+
+                var monitorAddr = monitors[2];
+                var newItem = {
+                    MonitorAddress: monitorAddr
+                }
+
+                if (monitorAddr !== ""){
+                    monitorInfo.push(newItem);
+                }
+            }
+            catch(e){
+                break;
+            }
+
+            index ++;
+        }
+
+        return monitorInfo;
+    }
 };
 
 // GET /VnodePool - merge every Vnode information from MongoDB collection and Chain3 result.
@@ -457,7 +549,7 @@ Router.route('/VnodeProtocolBaseAddr',{where: 'server'})
         this.response.end(JSON.stringify(response));
     });
 
-// GET /VnodeAddr - returns a random Vnode base on VnodeProtocolBaseAddr from MongoDB collection.
+// GET /VnodeAddr - returns vnode address base on VnodeProtocolBaseAddress.
 Router.route('/VnodeAddr/:VnodeProtocolBaseAddr',{where: 'server'})
     .get(function(){
         var protocolAddr = this.params.VnodeProtocolBaseAddr;
@@ -481,10 +573,28 @@ Router.route('/SCSAvailableFund/ProtocolAddr/:ProtocolAddr/SCSAddr/:SCSAddr', {w
         var scsAddr = this.params.SCSAddr;
 
         var subChainProtocol = SubChainProtocol.find({}, {fields:{ SubChainProtocolAddr: protocolAddr}}).fetch();
-        console.log("subChainProtocols", subChainProtocol);
         
         var result = getSCSAvailableFundBySubChainProtocol(protocolAddr, scsAddr);
         
         this.response.setHeader('Content-Type', 'application/json');
         this.response.end(JSON.stringify(result));
+    });
+
+
+// GET /MonitorAddr - returns monitor address base on SubChainBaseAddress.
+Router.route('/MonitorAddr/:SubChainBaseAddr',{where: 'server'})
+    .get(function(){
+        var protocolAddr = this.params.SubChainBaseAddr;
+        var data = getMonitorInfo(protocolAddr);
+
+        if(data !== undefined) {
+            response = data;
+        } else {
+            response = {
+                "error" : true,
+                "message" : "Subchain Base not found."
+            }
+        }
+        this.response.setHeader('Content-Type','application/json');
+        this.response.end(JSON.stringify(response));
     });
