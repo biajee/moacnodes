@@ -555,7 +555,7 @@ Router.route('/VnodeAddr/:VnodeProtocolBaseAddr',{where: 'server'})
         var protocolAddr = this.params.VnodeProtocolBaseAddr;
         var data = getVnodeInfo(protocolAddr);
         if(data !== undefined) {
-            response = data;
+            response = {"VnodeList": data};
         } else {
             response = {
                 "error" : true,
