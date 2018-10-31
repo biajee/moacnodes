@@ -588,7 +588,7 @@ Router.route('/MonitorAddr/:SubChainBaseAddr',{where: 'server'})
         var data = getMonitorInfo(protocolAddr);
 
         if(data !== undefined) {
-            response = data;
+            response = {"MonitorList": data};
         } else {
             response = {
                 "error" : true,
