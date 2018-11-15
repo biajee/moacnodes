@@ -16,6 +16,26 @@ case $i in
         target="ubuntu@52.88.19.78:/home/ubuntu"
         pem="/Users/ychen/innowells/pem/moacpool.pem"
     ;;
+    -c|--china)
+        message="Delivered to China Modada Test."
+        target="ubuntu@47.107.153.95:/home/ubuntu"
+        pem="/Users/ychen/innowells/pem/moacgatewaycn.pem"
+    ;;
+    -cp|--chinaProd)
+        message="Delivered to China Modada Prod."
+        target="ubuntu@47.107.153.95:/home/ubuntu/prod"
+        pem="/Users/ychen/innowells/pem/moacgatewaycn.pem"
+    ;;
+    -hkt|--hongkongtest)
+        message="Delivered to China Modada Test."
+        target="ubuntu@47.244.132.96:/home/ubuntu/test"
+        pem="/Users/ychen/innowells/pem/moacgatewaycn.pem"
+    ;;
+    -hkp|--hongkongprod)
+        message="Delivered to China Modada Prod."
+        target="ubuntu@47.244.132.96:/home/ubuntu/prod"
+        pem="/Users/ychen/innowells/pem/moacgatewaycn.pem"
+    ;;
 esac
 done
 
