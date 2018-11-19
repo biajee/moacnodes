@@ -1,20 +1,31 @@
 import { Meteor } from 'meteor/meteor';
-import Chain3 from 'chain3';
 import { _ } from 'underscore';
 
-global.Buffer = global.Buffer || require("buffer").Buffer;
+import './lib/moac/chain3Init';
+import './collections';
+import './SubChainProtocolPool';
 
-//"https://www.moacwalletonline.com/main"
-if(typeof chain3 !== 'undefined')
-  chain3 = new Chain3(chain3.currentProvider);
-else
-  chain3 = new Chain3(new Chain3.providers.HttpProvider("http://127.0.0.1:8545"));	
+// global.Buffer = global.Buffer || require("buffer").Buffer;
+
+// //"https://www.moacwalletonline.com/main"
+// if(typeof chain3 !== 'undefined')
+//   chain3 = new Chain3(chain3.currentProvider);
+// else
+//     // chain3 = new Chain3(new Chain3.providers.HttpProvider("http://127.0.0.1:8545"));	
+//   chain3 = new Chain3(new Chain3.providers.HttpProvider("http://gateway.moac.io/testnet"));	
+
+var interval = 10000;
 
 Meteor.startup(() => {
-  // code to run on server at startup
-  Vnode = new Meteor.Collection('vnode');
-  SubChainProtocol = new Meteor.Collection('subchainprotocol');
-  VnodeProtocolBase = new Meteor.Collection('vnodeprotocolbase');
+    Meteor.publish("SubChainProtocolProp", function(){
+        console.log('publish SubChainProtocolProp');
+        return SubChainProtocolProp.find({});
+        // return SubChainProtocolBasePublicProperties.find({SubChainProtocolAddr: '0x55db2865e29e8a1adC54fABDA221609536DD8b90'});
+    });
+
+    Meteor.setInterval(function(){
+        SubChainProtocolPool.syncPublicPropertiesFromChain();
+    }, interval);
 });
 
 var getSubChainProtoclBasePublicProperties = function(data) {
@@ -25,13 +36,18 @@ var getSubChainProtoclBasePublicProperties = function(data) {
     
     for (var i=0; i<len; i++) {
         var contractAddress = data[i].SubChainProtocolAddr;
-        // console.log("contractAddress: ", contractAddress);
+        console.log("contractAddress: ", contractAddress);
         var item = {
             "SubChainProtocolAddr": contractAddress
         };
         var contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
+
+        //console.log(contractInstance);
+
         if (contractInstance) {
             var scsCount = contractInstance.scsCount().toNumber();
+            console.log('scsCount', scsCount);
+
             item.scsCount = scsCount;
             var subChainProtocol = "";
             try {
@@ -48,6 +64,7 @@ var getSubChainProtoclBasePublicProperties = function(data) {
             var scsAddresses = [];
             var scsAvailableFunds = [];
             var scsIsPerforming = [];
+            var scs;
             if(scsCount!==0){
                 for(var j=0; j<scsCount; j++){
                     var scsAddress = contractInstance.scsArray(j);
@@ -106,6 +123,8 @@ var getSubChainProtoclBasePublicProperties = function(data) {
             }      
         }
     }
+    console.log('newData')
+    console.log(newData);
     return newData;
 };
 
@@ -324,6 +343,38 @@ var getMonitorInfo = function(subChainBaseAddress) {
     }
 };
 
+//Meteor Func
+Meteor.methods({
+    // 'VnodePool': function(){
+    //     var vnodes = chain3.net.getVnodes();
+    //     var result = _.map(vnodes, function(vnode)
+    //                     { 
+    //                         return {
+    //                             ip: vnode.ip,
+    //                             serviceCfgPort: vnode.serviceCfgPort,
+    //                             beneficialAddress: vnode.beneficialAddress
+    //                         };
+    //                     }
+    //                 );
+
+    //     result = result.concat(Vnode.find({}, {fields:{ _id: 0 }}).fetch());
+    //     response = _.uniq(result, v => [v.ip, v.serviceCfgPort, v.beneficialAddress].join());
+    //     console(response);
+    //     return response;
+    // },
+    'SubChainProtocolPool': function(){
+        var subChainProtocols = SubChainProtocol.find({}, {fields:{ _id: 0 }}).fetch();
+        var response = getSubChainProtoclBasePublicProperties(subChainProtocols);
+        return response;
+    },    
+    'VnodeProtocolBasePool': function(){
+        var VnodeProtocolBases = VnodeProtocolBase.find({}, {fields:{ _id: 0 }}).fetch();
+        var response = getVnodeProtocolBasePublicProperties(VnodeProtocolBases);
+        return response;
+    }
+});
+
+//Restful API
 // GET /VnodePool - merge every Vnode information from MongoDB collection and Chain3 result.
 Router.route('/VnodePool', {where: 'server'})
     .get(function(){
