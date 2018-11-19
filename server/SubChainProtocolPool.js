@@ -1,7 +1,6 @@
 import { _ } from 'meteor/underscore';
 
 import './collections';
-import './lib/Helpers';
 
 /**
 SubChainProtocolPool
