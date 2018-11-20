@@ -4,27 +4,34 @@ import { _ } from 'underscore';
 import './lib/moac/chain3Init';
 import './collections';
 import './SubChainProtocolPool';
+import './VnodeProtocolPool';
 
-// global.Buffer = global.Buffer || require("buffer").Buffer;
-
-// //"https://www.moacwalletonline.com/main"
-// if(typeof chain3 !== 'undefined')
-//   chain3 = new Chain3(chain3.currentProvider);
-// else
-//     // chain3 = new Chain3(new Chain3.providers.HttpProvider("http://127.0.0.1:8545"));	
-//   chain3 = new Chain3(new Chain3.providers.HttpProvider("http://gateway.moac.io/testnet"));	
-
-var interval = 10000;
+const interval = 10000;
 
 Meteor.startup(() => {
     Meteor.publish("SubChainProtocolProp", function(){
         console.log('publish SubChainProtocolProp');
         return SubChainProtocolProp.find({});
-        // return SubChainProtocolBasePublicProperties.find({SubChainProtocolAddr: '0x55db2865e29e8a1adC54fABDA221609536DD8b90'});
+    });
+
+    Meteor.publish("SubChainProtocolSCS", function(){
+        console.log('publish SubChainProtocolSCS');
+        return SubChainProtocolSCS.find({});
+    });
+
+    Meteor.publish("VnodeProtocolProp", function(){
+        console.log('publish VnodeProtocolProp');
+        return VnodeProtocolProp.find({});
+    });
+
+    Meteor.publish("VnodeProtocolVnode", function(){
+        console.log('publish VnodeProtocolVnode');
+        return VnodeProtocolVnode.find({});
     });
 
     Meteor.setInterval(function(){
         SubChainProtocolPool.syncPublicPropertiesFromChain();
+        VnodeProtocolPool.syncPublicPropertiesFromChain();
     }, interval);
 });
 

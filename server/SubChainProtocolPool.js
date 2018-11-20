@@ -89,17 +89,17 @@ SubChainProtocolPool.syncPublicPropertiesFromChain = function() {
 
                             scsAvailableFund = (bondNumber-bondApprovedNumber)/1e18;
                             scsIsPerforming = contractInstance.isPerforming(scsAddr);
+
+                            subChainProtocolSCSDataItem.scsAvailableFund = scsAvailableFund;
+                            subChainProtocolSCSDataItem.scsIsPerforming = scsIsPerforming;
+                            //scsPool.push({scsAvailableFund: scsAvailableFund, scsIsPerforming: scsIsPerforming});
+    
+                            subChainProtocolSCSData.push(subChainProtocolSCSDataItem);
                         } 
-                        else {
-                            scsAvailableFund = "N/A";
-                            scsIsPerforming  = "N/A";
-                        }
-
-                        subChainProtocolSCSDataItem.scsAvailableFund = scsAvailableFund;
-                        subChainProtocolSCSDataItem.scsIsPerforming = scsIsPerforming;
-                        //scsPool.push({scsAvailableFund: scsAvailableFund, scsIsPerforming: scsIsPerforming});
-
-                        subChainProtocolSCSData.push(subChainProtocolSCSDataItem);
+                        // else {
+                        //     scsAvailableFund = "N/A";
+                        //     scsIsPerforming  = "N/A";
+                        // }
                     }
                 }
             }
