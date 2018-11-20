@@ -12,7 +12,7 @@ SubChainProtocolPool
  * @ class
  * @constructor
  */
-let SubChainProtocolPool = {
+SubChainProtocolPool = {
     isSyncRunning: false
 }
 
