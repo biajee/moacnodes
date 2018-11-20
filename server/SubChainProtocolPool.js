@@ -1,5 +1,4 @@
 import { _ } from 'meteor/underscore';
-
 import './collections';
 
 /**
@@ -13,7 +12,7 @@ SubChainProtocolPool
  * @ class
  * @constructor
  */
-SubChainProtocolPool = {
+let SubChainProtocolPool = {
     isSyncRunning: false
 }
 
@@ -62,7 +61,7 @@ SubChainProtocolPool.syncPublicPropertiesFromChain = function() {
                     subChainProtocolDataItem.subChainProtocol = subChainProtocol;
                 }
 
-                var bondMin = contractInstance.bondMin().toNumber();
+                let bondMin = contractInstance.bondMin().toNumber();
                 subChainProtocolDataItem.bondMin = bondMin;
 
                 subChainProtocolData.push(subChainProtocolDataItem);
