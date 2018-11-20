@@ -107,8 +107,13 @@ SubChainProtocolPool.syncPublicPropertiesFromChain = function() {
 
         let subChainProtocolDataFromDB = SubChainProtocolProp.find({}, {sort:{SubChainProtocolAddr: 1}}).fetch();
         let res = this.diffSubChainProtocolData(subChainProtocolData, subChainProtocolDataFromDB);
-        console.log('res[0]', res[0]); //upsert
-        console.log('res[1]', res[1]); //delete
+
+        let subChainProtocolSCSDataFromDB = SubChainProtocolSCS.find({}, {sort:{SubChainProtocolAddr: 1, scsAddr: 1}}).fetch();
+        subChainProtocolSCSData = _.sortBy((_.sortBy(subChainProtocolSCSData, 'scsAddr')), 'SubChainProtocolAddr');
+        let res1 = this.diffSubChainProtocolSCSData(subChainProtocolSCSData, subChainProtocolSCSDataFromDB);
+
+        // console.log('res[0]', res[0]); //upsert
+        // console.log('res[1]', res[1]); //delete
 
         for(let i=0; i<res[0].length; i++){
             SubChainProtocolProp.upsert({SubChainProtocolAddr: res[0][i].SubChainProtocolAddr}, {$set: {
@@ -124,25 +129,21 @@ SubChainProtocolPool.syncPublicPropertiesFromChain = function() {
             SubChainProtocolProp.remove({SubChainProtocolAddr: res[1][i].SubChainProtocolAddr});
         }
 
-        let subChainProtocolSCSDataFromDB = SubChainProtocolSCS.find({}, {sort:{SubChainProtocolAddr: 1, scsAddr: 1}}).fetch();
-        subChainProtocolSCSData = _.sortBy((_.sortBy(subChainProtocolSCSData, 'scsAddr')), 'SubChainProtocolAddr');
+        // console.log('scs res[0]', res[0]); //upsert
+        // console.log('scs res[1]', res[1]); //delete
 
-        res = this.diffSubChainProtocolSCSData(subChainProtocolSCSData, subChainProtocolSCSDataFromDB);
-        console.log('scs res[0]', res[0]); //upsert
-        console.log('scs res[1]', res[1]); //delete
-
-        for(let i=0; i<res[0].length; i++){
-            SubChainProtocolSCS.upsert({SubChainProtocolAddr: res[0][i].SubChainProtocolAddr, scsAddr: res[0][i].scsAddr}, {$set: {
-                SubChainProtocolAddr: res[0][i].SubChainProtocolAddr,
-                scsAddr: res[0][i].scsAddr,
-                scsAvailableFund: res[0][i].scsAvailableFund,
-                scsIsPerforming: res[0][i].scsIsPerforming,
+        for(let i=0; i<res1[0].length; i++){
+            SubChainProtocolSCS.upsert({SubChainProtocolAddr: res1[0][i].SubChainProtocolAddr, scsAddr: res1[0][i].scsAddr}, {$set: {
+                SubChainProtocolAddr: res1[0][i].SubChainProtocolAddr,
+                scsAddr: res1[0][i].scsAddr,
+                scsAvailableFund: res1[0][i].scsAvailableFund,
+                scsIsPerforming: res1[0][i].scsIsPerforming,
                 updatedAt: Date.now().toString(),
             }}, {upsert: true});
         }
 
-        for(let i=0; i<res[1].length; i++){
-            SubChainProtocolSCS.remove({SubChainProtocolAddr: res[1][i].SubChainProtocolAddr, scsAddr: res[1][i].scsAddr});
+        for(let i=0; i<res1[1].length; i++){
+            SubChainProtocolSCS.remove({SubChainProtocolAddr: res1[1][i].SubChainProtocolAddr, scsAddr: res1[1][i].scsAddr});
         }
 
         this.isSyncRunning = false;
@@ -180,10 +181,10 @@ SubChainProtocolPool.diffSubChainProtocolData = function(dataFromChain, dataFrom
             pDataFromChain++;      
             continue;      
         }
-        console.log("pDataFromChain, ", pDataFromChain);
-        console.log("lDataFromChain, ", lDataFromChain);
-        console.log("pDataFromDB, ", pDataFromDB);
-        console.log("lDataFromDB, ", lDataFromDB);
+        // console.log("pDataFromChain, ", pDataFromChain);
+        // console.log("lDataFromChain, ", lDataFromChain);
+        // console.log("pDataFromDB, ", pDataFromDB);
+        // console.log("lDataFromDB, ", lDataFromDB);
 
         if (dataFromChain[pDataFromChain].SubChainProtocolAddr === dataFromDB[pDataFromDB].SubChainProtocolAddr){
             if (dataFromChain[pDataFromChain].scsCount !== dataFromDB[pDataFromDB].scsCount){
@@ -236,10 +237,10 @@ SubChainProtocolPool.diffSubChainProtocolSCSData = function(dataFromChain, dataF
             pDataFromChain++;      
             continue;      
         }
-        console.log("pDataFromChain, ", pDataFromChain);
-        console.log("lDataFromChain, ", lDataFromChain);
-        console.log("pDataFromDB, ", pDataFromDB);
-        console.log("lDataFromDB, ", lDataFromDB);
+        // console.log("pDataFromChain, ", pDataFromChain);
+        // console.log("lDataFromChain, ", lDataFromChain);
+        // console.log("pDataFromDB, ", pDataFromDB);
+        // console.log("lDataFromDB, ", lDataFromDB);
 
         if (dataFromChain[pDataFromChain].SubChainProtocolAddr === dataFromDB[pDataFromDB].SubChainProtocolAddr){
             if (dataFromChain[pDataFromChain].scsAddr === dataFromDB[pDataFromDB].scsAddr){

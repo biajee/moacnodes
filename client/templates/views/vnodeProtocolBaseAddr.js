@@ -1,24 +1,27 @@
+import { Meteor } from 'meteor/meteor';
 import {Template} from 'meteor/templating';
-import { HTTP } from 'meteor/http';
-import { Session } from 'meteor/session'
-
+import '../../collections';
 import './vnodeProtocolBaseAddr.html';
 
 Template.VnodeProtocolBaseAddrPool.onCreated(function (){
-    Session.set('isVnodeProtocolBaseAddrPoolReady', false);
-    HTTP.call('GET', '/VnodeProtocolBasePool', {}, 
-        function(error, response){
-            if (!error) {
-                Session.set('isVnodeProtocolBaseAddrPoolReady', true);
-                Session.set('VnodeProtocolBaseAddrPoolReadyResult', response.data);
-            }
-        });
+    let template = this;
+
+    Meteor.subscribe('VnodeProtocolProp',{
+        onReady: function() {
+            TemplateVar.set(template, 'VnodeProtocolProp',  VnodeProtocolProp);
+        }
+    });
+
+    Meteor.subscribe('VnodeProtocolVnode',{
+        onReady: function() {
+            TemplateVar.set(template, 'VnodeProtocolVnode',  VnodeProtocolVnode);
+        }
+    });
 });
 
 Template.VnodeProtocolBaseAddrPool.helpers({
     vnodeProtocolBaseAddrCollection() {
-        while(Session.get('isVnodeProtocolBaseAddrPoolReady')===false){ window.setTimeout(vnodeProtocolBaseAddrCollection, 100); }
-        return Session.get('VnodeProtocolBaseAddrPoolReadyResult');
+        return TemplateVar.get('VnodeProtocolProp');
     },
     settings: function () {
         return {
@@ -31,7 +34,7 @@ Template.VnodeProtocolBaseAddrPool.helpers({
                 { key: 'VnodeProtocolBaseAddr', label: 'Vnode Protocol Base Address', sortOrder: 1, sortDirection: 'descending' ,sortable: false },
                 { key: 'bondMin', label: 'Min Bond', sortable: false},
                 { key: 'vnodeCount', label: 'Vnode Count', sortable: false},
-                { key: 'vnodeAddresses', label: 'Vnode IP/Port', sortable: false}
+                // { key: 'vnodeAddresses', label: 'Vnode IP/Port', sortable: false}
             ],
             useFontAwesome: true,
             group: 'client'

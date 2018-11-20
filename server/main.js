@@ -8,32 +8,95 @@ import './VnodeProtocolPool';
 
 const interval = 10000;
 
-Meteor.startup(() => {
-    Meteor.publish("SubChainProtocolProp", function(){
-        console.log('publish SubChainProtocolProp');
-        return SubChainProtocolProp.find({});
-    });
+Meteor.startup(() =>{
+    //Sample Data
+    if(SubChainProtocol.find().count() === 0){
+        const SubChainProtocolData = [
+            {
+                "SubChainProtocolAddr" : "0x0dd387651DaAbd603Bd8d2B53270b5C37CD54623"
+            },
+            {
+                "SubChainProtocolAddr" : "0xB4e74a8a49Cf53C948B1ACd1e431F88F6d573Dee"
+            },
+            {
+                "SubChainProtocolAddr" : "0xEd710A8d329EbcD71493660e1bB2D728915A4D52"
+            },
+            {
+                "SubChainProtocolAddr" : "0x55db2865e29e8a1adC54fABDA221609536DD8b90"
+            },
+            {
+                "SubChainProtocolAddr" : "0x4493CC8e12C23AFD75f8942f9dEd432e8BF1F36F"
+            }
+        ]
 
-    Meteor.publish("SubChainProtocolSCS", function(){
-        console.log('publish SubChainProtocolSCS');
-        return SubChainProtocolSCS.find({});
-    });
+        SubChainProtocolData.forEach((data) => {
+            SubChainProtocol.insert(
+              {
+                SubChainProtocolAddr: data.SubChainProtocolAddr,
+              }
+            );
+        });
+    }
 
-    Meteor.publish("VnodeProtocolProp", function(){
-        console.log('publish VnodeProtocolProp');
-        return VnodeProtocolProp.find({});
-    });
+    if(VnodeProtocolBase.find().count() === 0){
+        const VnodeProtocolBaseData = [
+            {
+                "VnodeProtocolBaseAddr" : "0x5B43583F33214c790B8206D9B06685c49A1DB455"
+            },
+            {
+                "VnodeProtocolBaseAddr" : "0x9E752bf2129D67B9fa92f072b0A51d08d838F297"
+            }
+        ]
 
-    Meteor.publish("VnodeProtocolVnode", function(){
-        console.log('publish VnodeProtocolVnode');
-        return VnodeProtocolVnode.find({});
-    });
-
-    Meteor.setInterval(function(){
-        SubChainProtocolPool.syncPublicPropertiesFromChain();
-        VnodeProtocolPool.syncPublicPropertiesFromChain();
-    }, interval);
+        VnodeProtocolBaseData.forEach((data) => {
+            VnodeProtocolBase.insert(
+              {
+                VnodeProtocolBaseAddr: data.VnodeProtocolBaseAddr,
+              }
+            );
+        });
+    }
 });
+
+Meteor.publish("SubChainProtocolProp", function(){
+    console.log('publish SubChainProtocolProp');
+    return SubChainProtocolProp.find({});
+});
+
+Meteor.publish("SubChainProtocolSCS", function(){
+    console.log('publish SubChainProtocolSCS');
+    return SubChainProtocolSCS.find({});
+});
+
+Meteor.publish("VnodeProtocolProp", function(){
+    console.log('publish VnodeProtocolProp');
+    return VnodeProtocolProp.find({});
+});
+
+Meteor.publish("VnodeProtocolVnode", function(){
+    console.log('publish VnodeProtocolVnode');
+    return VnodeProtocolVnode.find({});
+});
+
+Meteor.setInterval(function(){
+    if(SubChainProtocolPool.isSyncRunning === false)
+    {
+        console.log("Start SubChainProtocolPool");
+        SubChainProtocolPool.syncPublicPropertiesFromChain();
+    }
+    else{
+        console.log("SubChainProtocolPool.syncPublicPropertiesFromChain already ran");
+    };
+
+    if(VnodeProtocolPool.isSyncRunning === false)
+    {
+        console.log("Start VnodeProtocolPool.syncPublicPropertiesFromChain");
+        VnodeProtocolPool.syncPublicPropertiesFromChain();
+    }
+    else{
+        console.log("VnodeProtocolPool.syncPublicPropertiesFromChain already ran");
+    };
+}, interval);
 
 var getSubChainProtoclBasePublicProperties = function(data) {
     var newData = [];

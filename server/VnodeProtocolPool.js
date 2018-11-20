@@ -70,8 +70,13 @@ VnodeProtocolPool.syncPublicPropertiesFromChain = function() {
 
         let vnodeProtocolDataFromDB = VnodeProtocolProp.find({}, {sort:{VnodeProtocolBaseAddr: 1}}).fetch();
         let res = this.diffVnodeProtocolData(vnodeProtocolData, vnodeProtocolDataFromDB);
-        console.log('res[0]', res[0]); //upsert
-        console.log('res[1]', res[1]); //delete
+
+        let vnodeProtocolVnodeDataFromDB = VnodeProtocolVnode.find({}, {sort:{VnodeProtocolBaseAddr: 1, link: 1}}).fetch();
+        vnodeProtocolVnodeData = _.sortBy((_.sortBy(vnodeProtocolVnodeData, 'link')), 'VnodeProtocolBaseAddr');
+        let res1 = this.diffVnodeProtocolVnodeData(vnodeProtocolVnodeData, vnodeProtocolVnodeDataFromDB);        
+
+        // console.log('res[0]', res[0]); //upsert
+        // console.log('res[1]', res[1]); //delete
 
         for(let i=0; i<res[0].length; i++){
             VnodeProtocolProp.upsert({VnodeProtocolBaseAddr: res[0][i].VnodeProtocolBaseAddr}, {$set: {
@@ -86,23 +91,20 @@ VnodeProtocolPool.syncPublicPropertiesFromChain = function() {
             VnodeProtocolProp.remove({VnodeProtocolBaseAddr: res[0][i].VnodeProtocolBaseAddr});
         }
 
-        let vnodeProtocolVnodeDataFromDB = VnodeProtocolVnode.find({}, {sort:{VnodeProtocolBaseAddr: 1, link: 1}}).fetch();
-        vnodeProtocolVnodeData = _.sortBy((_.sortBy(vnodeProtocolVnodeData, 'link')), 'VnodeProtocolBaseAddr');
 
-        res = this.diffVnodeProtocolVnodeData(vnodeProtocolVnodeData, vnodeProtocolVnodeDataFromDB);
-        console.log('vnode res[0]', res[0]); //upsert
-        console.log('vnode res[1]', res[1]); //delete
+        // console.log('vnode res[0]', res[0]); //upsert
+        // console.log('vnode res[1]', res[1]); //delete
 
-        for(let i=0; i<res[0].length; i++){
-            VnodeProtocolVnode.upsert({VnodeProtocolBaseAddr: res[0][i].VnodeProtocolBaseAddr, link: res[0][i].link}, {$set: {
-                VnodeProtocolBaseAddr: res[0][i].VnodeProtocolBaseAddr,
-                link: res[0][i].link,
+        for(let i=0; i<res1[0].length; i++){
+            VnodeProtocolVnode.upsert({VnodeProtocolBaseAddr: res1[0][i].VnodeProtocolBaseAddr, link: res1[0][i].link}, {$set: {
+                VnodeProtocolBaseAddr: res1[0][i].VnodeProtocolBaseAddr,
+                link: res1[0][i].link,
                 updatedAt: Date(),
             }}, {upsert: true});
         }
 
-        for(let i=0; i<res[1].length; i++){
-            VnodeProtocolVnode.remove({VnodeProtocolBaseAddr: res[1][i].VnodeProtocolBaseAddr, link: res[1][i].link});
+        for(let i=0; i<res1[1].length; i++){
+            VnodeProtocolVnode.remove({VnodeProtocolBaseAddr: res1[1][i].VnodeProtocolBaseAddr, link: res1[1][i].link});
         }
 
         this.isSyncRunning = false;
@@ -140,10 +142,10 @@ VnodeProtocolPool.diffVnodeProtocolData = function(dataFromChain, dataFromDB){
             pDataFromChain++;      
             continue;      
         }
-        console.log("pDataFromChain, ", pDataFromChain);
-        console.log("lDataFromChain, ", lDataFromChain);
-        console.log("pDataFromDB, ", pDataFromDB);
-        console.log("lDataFromDB, ", lDataFromDB);
+        // console.log("pDataFromChain, ", pDataFromChain);
+        // console.log("lDataFromChain, ", lDataFromChain);
+        // console.log("pDataFromDB, ", pDataFromDB);
+        // console.log("lDataFromDB, ", lDataFromDB);
 
         if (dataFromChain[pDataFromChain].VnodeProtocolBaseAddr === dataFromDB[pDataFromDB].VnodeProtocolBaseAddr){
             if (dataFromChain[pDataFromChain].vnodeCount !== dataFromDB[pDataFromDB].vnodeCount){
@@ -196,19 +198,13 @@ VnodeProtocolPool.diffVnodeProtocolVnodeData = function(dataFromChain, dataFromD
             pDataFromChain++;      
             continue;      
         }
-        console.log("pDataFromChain, ", pDataFromChain);
-        console.log("lDataFromChain, ", lDataFromChain);
-        console.log("pDataFromDB, ", pDataFromDB);
-        console.log("lDataFromDB, ", lDataFromDB);
+        // console.log("pDataFromChain, ", pDataFromChain);
+        // console.log("lDataFromChain, ", lDataFromChain);
+        // console.log("pDataFromDB, ", pDataFromDB);
+        // console.log("lDataFromDB, ", lDataFromDB);
 
         if (dataFromChain[pDataFromChain].VnodeProtocolBaseAddr === dataFromDB[pDataFromDB].VnodeProtocolBaseAddr){
             if (dataFromChain[pDataFromChain].link === dataFromDB[pDataFromDB].link){
-                // if (dataFromChain[pDataFromChain].scsAvailableFund !== dataFromDB[pDataFromDB].scsAvailableFund
-                //     ||
-                //     dataFromChain[pDataFromChain].scsIsPerforming !== dataFromDB[pDataFromDB].scsIsPerforming){
-                //     console.log('push1: ', dataFromChain[pDataFromChain]);
-                //     upsertDB.push(dataFromChain[pDataFromChain]);
-                // }
                 pDataFromChain++;
                 pDataFromDB++;
             }
