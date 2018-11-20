@@ -2,49 +2,71 @@ import { Meteor } from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import '../../collections';
 import './subchainProtocolAddr.html';
+import './scsModal.html'
 
 Template.SubChainProtocolAddrPool.onCreated(function (){
-    let template = this;
-
-    Meteor.subscribe('SubChainProtocolProp',{
-        onReady: function() {
-            TemplateVar.set(template, 'SubChainProtocolProp',  SubChainProtocolProp);
-        }
-    });
-
-    Meteor.subscribe('SubChainProtocolSCS',{
-        onReady: function() {
-            TemplateVar.set(template, 'SubChainProtocolSCS',  SubChainProtocolSCS);
-        }
-    });
+    Meteor.subscribe('SubChainProtocolProp');
 });
 
 Template.SubChainProtocolAddrPool.helpers({
-    subChainProtocolAddrCollection() {
-        return TemplateVar.get('SubChainProtocolProp');
-    },
-    settings: function () {
-        return {
-            rowsPerPage: 15,
-            showFilter: false,
-            sortable: false,
-            showNavigation: 'auto',
-            fields: [
-                // { key: 'id', label: 'id', sortOrder: 0, sortDirection: 'ascending', hidden: true},
-                { key: 'SubChainProtocolAddr', label: 'MicroChain Protocol Address', sortOrder: 1, sortDirection: 'descending' ,sortable: false},
-                { key: 'subChainProtocol', label: 'Protocol Name', sortable: false },
-                { key: 'bondMin', label: 'Min Bond', sortable: false },
-                { key: 'scsCount', label: 'SCS Count', sortable: false },
-                // { key: 'scsAddress', label: 'SCS Address', sortable: false },
-                // { key: 'scsPool..scsAvailableFund', label: 'SCS Available Fund', sortable: false },
-                // { key: 'scsPool..scsIsPerforming', label: 'Performing', sortable: false }
-                // {key: 'scsPool', label: 'SCS', tmpl: Template.scsPool}
-            ],
-            useFontAwesome: true
-        };
+    props() {
+        //alert(SubChainProtocolProp.find().fetch());
+        return SubChainProtocolProp.find().fetch();
     }
     
 });
+
+Template['SubChainProtocolAddrPool'].events({
+
+    'click button'(){
+        Session.set('query',this.SubChainProtocolAddr);
+        Modal.show('SCSs');
+        //console.log(this.SubChainProtocolAddr);
+    }
+
+})
+
+Template['SCSs'].helpers({
+    SCSs(){
+    var query = Session.get('query');
+    Meteor.call('showSCS',query,(e,r)=>{
+        Session.set('all_pages',r);
+        Session.set('pageNum',r.length);
+    })
+    all_pages = Session.get('all_pages');
+    pageNum = Session.get('pageNum');
+    var pageIdx =[];
+    for(var i = 1; i <=pageNum; i++){
+        pageIdx.push(i);
+    }
+    var currPage = Session.get('currPage');
+    return {singlePage: all_pages[currPage], pageIdx: pageIdx};
+},
+    checkActive(idx){
+        var currPage = Session.get('currPage');
+        //console.log(idx);
+        return (currPage == (idx-1)) && 'active';
+    }
+})
+
+Template['SCSs'].events({
+    'click li.idx'(event){
+        var currPage = event.target.text;
+        Session.set('currPage',currPage-1);
+    },
+    'click li#prev'(event){
+        var currPage = Session.get('currPage');
+        if (currPage !=0)
+        Session.set('currPage',currPage-1);
+    },
+    'click li#next'(event){
+        var currPage = Session.get('currPage');
+        pageNum = Session.get('pageNum');
+        if (currPage < pageNum - 1)
+        Session.set('currPage',currPage+1);
+    },
+
+})
 
 // Template.scsPool.onCreated(function () {
 //     var scsPool = this.data;

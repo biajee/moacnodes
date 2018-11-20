@@ -1,0 +1,50 @@
+<template name="SCSs">
+	<div class="modal fade" >
+		<div class="modal-dialog modal-md" >
+			<div class="modal-content" style="background-color:rgba(255,255,255,1);">
+
+				<div class="modal-body" style="height: 430px;">
+				{{#if SCSs.pageIdx}}
+				<table class="table table-hover" >
+					<thead>
+    					<tr>
+    					<th >scsAddr</th>
+    					<th >scsAvailableFund</th>
+    					</tr>
+    				</thead>
+					<tbody>
+					{{#with SCSs}} 
+					  {{#each singlePage}}
+					 <tr class="{{#unless scsAvailableFund}}table-danger{{/unless}}">
+	 					<td>{{scsAddr}}</td>
+	 					<td >{{scsAvailableFund}}</td>
+					 </tr>
+					 {{/each}}
+					{{/with}}
+					</tbody>
+				</table>
+				{{else}}
+				<h3 style="text-align: center;">NO SCS AVAILABLE</h3>
+				{{/if}}
+				</div>
+				
+				<div class="modal-footer">
+					{{#if SCSs.pageIdx}}
+					{{#with SCSs}} 
+					 <div style="background: white;margin:auto" >
+					 <ul class="pagination">
+    					<li id='prev'><a href="#">&laquo;</a></li>
+    					{{#each pageIdx}}
+    					<li class='idx {{checkActive this}}'><a href="#" >{{this}}</a></li>
+    					{{/each}}
+    					<li id='next'><a href="#">&raquo;</a></li>
+					</ul>
+					</div>
+					{{/with}}
+					{{/if}}
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
