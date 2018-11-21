@@ -1,15 +1,15 @@
 <template name="SCSs">
 	<div class="modal fade" >
-		<div class="modal-dialog modal-md" >
+		<div class="modal-dialog" >
 			<div class="modal-content" style="background-color:rgba(255,255,255,1);">
 
-				<div class="modal-body" style="height: 430px;">
+				<div class="modal-body" style="height: 430px;width: 600px">
 				{{#if SCSs.pageIdx}}
 				<table class="table table-hover" >
 					<thead>
     					<tr>
-    					<th >scsAddr</th>
-    					<th >scsAvailableFund</th>
+    					<th >SCS Address</th>
+    					<th >SCS Available Fund	Performing</th>
     					</tr>
     				</thead>
 					<tbody>
@@ -17,7 +17,7 @@
 					  {{#each singlePage}}
 					 <tr class="{{#unless scsAvailableFund}}danger{{/unless}}">
 	 					<td>{{scsAddr}}</td>
-	 					<td >{{scsAvailableFund}}</td>
+	 					<td style="text-align: center">{{scsAvailableFund}}</td>
 					 </tr>
 					 {{/each}}
 					{{/with}}
@@ -32,7 +32,7 @@
 					{{#if SCSs.pageIdx}}
 					{{#with SCSs}} 
 					 <div style="background: white" >
-					 <ul class="pagination" style="margin-left:50px">
+					 <ul class="pagination">
     					<li id='prev'><a href="#">&laquo;</a></li>
     					{{#each pageIdx}}
     					<li class='idx {{checkActive this}}'><a href="#" >{{this}}</a></li>
