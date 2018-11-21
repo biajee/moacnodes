@@ -1,38 +1,38 @@
-<template name="SCSs">
+<template name="Vnodes">
 	<div class="modal fade" >
 		<div class="modal-dialog modal-md" >
 			<div class="modal-content" style="background-color:rgba(255,255,255,1);">
 
 				<div class="modal-body" style="height: 430px;">
-				{{#if SCSs.pageIdx}}
+				{{#if Vnodes.pageIdx}}
 				<table class="table table-hover" >
 					<thead>
     					<tr>
-    					<th >scsAddr</th>
-    					<th >scsAvailableFund</th>
+    					<th >vnodeAddr</th>
+    					<th >link</th>
     					</tr>
     				</thead>
 					<tbody>
-					{{#with SCSs}} 
+					{{#with Vnodes}} 
 					  {{#each singlePage}}
-					 <tr class="{{#unless scsAvailableFund}}danger{{/unless}}">
-	 					<td>{{scsAddr}}</td>
-	 					<td >{{scsAvailableFund}}</td>
+					 <tr>
+	 					<td>{{VnodeProtocolBaseAddr}}</td>
+	 					<td >{{link}}</td>
 					 </tr>
 					 {{/each}}
 					{{/with}}
 					</tbody>
 				</table>
 				{{else}}
-				<h3 style="text-align: center;">NO SCS AVAILABLE</h3>
+				<h3 style="text-align: center;">NO VNODE AVAILABLE</h3>
 				{{/if}}
 				</div>
 				
 				<div class="modal-footer">
-					{{#if SCSs.pageIdx}}
-					{{#with SCSs}} 
-					 <div style="background: white" >
-					 <ul class="pagination" style="margin-left:50px">
+					{{#if Vnodes.pageIdx}}
+					{{#with Vnodes}} 
+					 <div style="background: white;margin:auto" >
+					 <ul class="pagination">
     					<li id='prev'><a href="#">&laquo;</a></li>
     					{{#each pageIdx}}
     					<li class='idx {{checkActive this}}'><a href="#" >{{this}}</a></li>

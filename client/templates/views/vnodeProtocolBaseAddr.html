@@ -1,3 +1,22 @@
 <template name = "VnodeProtocolBaseAddrPool">
-    {{> reactiveTable collection=vnodeProtocolBaseAddrCollection settings=settings}}
+   <table class="table table-sm table-hover ">
+    <thead>
+    	<tr>
+    		<th>VnodeProtocolBaseAddr</th>
+    		<th>bondMin</th>
+    		<th>vnodeCount</th>
+            <th></th>
+    	</tr>
+    </thead>
+	<tbody>
+    {{#each VnodeProps}} 
+	 <tr>
+    	<td>{{VnodeProtocolBaseAddr}}</td>
+    	<td>{{bondMin}}</td>
+    	<td>{{vnodeCount}}</td>
+        <td><button class="btn btn-info" style="font-size: 11px">Vnode Detail</button></td>
+	 </tr>
+    {{/each}}
+	</tbody>
+</table>
 </template>

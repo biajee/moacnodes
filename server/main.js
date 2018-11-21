@@ -81,25 +81,25 @@ Meteor.publish("VnodeProtocolVnode", function(){
     return VnodeProtocolVnode.find({});
 });
 
-Meteor.setInterval(function(){
-    if(SubChainProtocolPool.isSyncRunning === false)
-    {
-        console.log("Start SubChainProtocolPool");
-        SubChainProtocolPool.syncPublicPropertiesFromChain();
-    }
-    else{
-        console.log("SubChainProtocolPool.syncPublicPropertiesFromChain already ran");
-    };
+// Meteor.setInterval(function(){
+//     if(SubChainProtocolPool.isSyncRunning === false)
+//     {
+//         console.log("Start SubChainProtocolPool");
+//         SubChainProtocolPool.syncPublicPropertiesFromChain();
+//     }
+//     else{
+//         console.log("SubChainProtocolPool.syncPublicPropertiesFromChain already ran");
+//     };
 
-    if(VnodeProtocolPool.isSyncRunning === false)
-    {
-        console.log("Start VnodeProtocolPool.syncPublicPropertiesFromChain");
-        VnodeProtocolPool.syncPublicPropertiesFromChain();
-    }
-    else{
-        console.log("VnodeProtocolPool.syncPublicPropertiesFromChain already ran");
-    };
-}, interval);
+//     if(VnodeProtocolPool.isSyncRunning === false)
+//     {
+//         console.log("Start VnodeProtocolPool.syncPublicPropertiesFromChain");
+//         VnodeProtocolPool.syncPublicPropertiesFromChain();
+//     }
+//     else{
+//         console.log("VnodeProtocolPool.syncPublicPropertiesFromChain already ran");
+//     };
+// }, interval);
 
 var getSubChainProtoclBasePublicProperties = function(data) {
     var newData = [];
