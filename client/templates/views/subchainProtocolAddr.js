@@ -4,7 +4,6 @@ import '../../collections';
 import './subchainProtocolAddr.html';
 import './scsModal.html'
 
-
 function pagination(addr){
         // console.log(SubChainProtocolSCS.find({SubChainProtocolAddr:'0x0dd387651DaAbd603Bd8d2B53270b5C37CD54623'}).fetch());
         var SCSs = SubChainProtocolSCS.find({'SubChainProtocolAddr':addr}).fetch();
@@ -23,7 +22,6 @@ function pagination(addr){
         return pagination;
     }
 
-
 Template.SubChainProtocolAddrPool.onCreated(function (){
     Meteor.subscribe('SubChainProtocolProp');
     Meteor.subscribe('SubChainProtocolSCS');
@@ -32,33 +30,30 @@ Template.SubChainProtocolAddrPool.onCreated(function (){
 
 Template.SubChainProtocolAddrPool.helpers({
     props() {
-        //alert(SubChainProtocolProp.find().fetch());
+        //console.log(SubChainProtocolProp.find().fetch());
+        //console.log(SubChainProtocolProp.find());
         return SubChainProtocolProp.find().fetch();
     }
-    
 });
 
 Template['SubChainProtocolAddrPool'].events({
-
     'click button'(){
         Session.set('query',this.SubChainProtocolAddr);
         Modal.show('SCSs');
         //console.log(this.SubChainProtocolAddr);
     }
-
 })
 
 Template['SCSs'].onCreated(function (){
    Session.set('currPage',0);
-
 });
 
 Template['SCSs'].helpers({
     SCSs(){
     var query = Session.get('query');
     all_pages = pagination(query);
-        //console.log(r);
-        //Session.set('all_pages', pagination);
+    console.log(all_pages);
+    //Session.set('all_pages', pagination);
     Session.set('pageNum',all_pages.length);
     //var allSCS = SubChainProtocolSCS.find({'SubChainProtocolAddr':addr}).fetch();
     //all_pages = Session.get('all_pages');
@@ -74,6 +69,10 @@ Template['SCSs'].helpers({
         var currPage = Session.get('currPage');
         //console.log(idx);
         return (currPage == (idx-1)) && 'active';
+    },
+
+    checkPerform(status){
+        return (status == true) && true;
     }
 })
 
