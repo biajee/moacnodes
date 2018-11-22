@@ -159,7 +159,7 @@ VnodeProtocolPool.diffVnodeProtocolData = function(dataFromChain, dataFromDB){
             pDataFromChain++;
         }
         else if (dataFromChain[pDataFromChain].VnodeProtocolBaseAddr > dataFromDB[pDataFromDB].VnodeProtocolBaseAddr){
-            deleteDB.push(pDataFromDB[pDataFromDB]);
+            deleteDB.push(dataFromDB[pDataFromDB]);
             pDataFromDB++;
         }
     }
@@ -224,7 +224,7 @@ VnodeProtocolPool.diffVnodeProtocolVnodeData = function(dataFromChain, dataFromD
             pDataFromChain++;
         }
         else if (dataFromChain[pDataFromChain].VnodeProtocolBaseAddr > dataFromDB[pDataFromDB].VnodeProtocolBaseAddr){
-            deleteDB.push(pDataFromDB[pDataFromDB]);
+            deleteDB.push(dataFromDB[pDataFromDB]);
             pDataFromDB++;
         }
     }

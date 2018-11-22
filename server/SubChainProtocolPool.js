@@ -111,8 +111,8 @@ SubChainProtocolPool.syncPublicPropertiesFromChain = function() {
         subChainProtocolSCSData = _.sortBy((_.sortBy(subChainProtocolSCSData, 'scsAddr')), 'SubChainProtocolAddr');
         let res1 = this.diffSubChainProtocolSCSData(subChainProtocolSCSData, subChainProtocolSCSDataFromDB);
 
-        // console.log('res[0]', res[0]); //upsert
-        // console.log('res[1]', res[1]); //delete
+        console.log('res[0]', res[0]); //upsert
+        console.log('res[1]', res[1]); //delete
 
         for(let i=0; i<res[0].length; i++){
             SubChainProtocolProp.upsert({SubChainProtocolAddr: res[0][i].SubChainProtocolAddr}, {$set: {
@@ -197,7 +197,7 @@ SubChainProtocolPool.diffSubChainProtocolData = function(dataFromChain, dataFrom
             pDataFromChain++;
         }
         else if (dataFromChain[pDataFromChain].SubChainProtocolAddr > dataFromDB[pDataFromDB].SubChainProtocolAddr){
-            deleteDB.push(pDataFromDB[pDataFromDB]);
+            deleteDB.push(dataFromDB[pDataFromDB]);
             pDataFromDB++;
         }
     }
@@ -258,7 +258,7 @@ SubChainProtocolPool.diffSubChainProtocolSCSData = function(dataFromChain, dataF
                 pDataFromChain++;                
             }
             else if (dataFromChain[pDataFromChain].scsAddr > dataFromDB[pDataFromDB].scsAddr){
-                deleteDB.push(pDataFromDB[pDataFromDB]);
+                deleteDB.push(dataFromDB[pDataFromDB]);
                 pDataFromDB++;           
             }
         }
