@@ -1,6 +1,6 @@
 <template name="Vnodes">
 	<div class="modal fade" >
-		<div class="modal-dialog modal-md" >
+		<div class="modal-dialog modal-sm" >
 			<div class="modal-content" style="background-color:rgba(255,255,255,1);">
 
 				<div class="modal-body" style="height: 430px;">
@@ -8,16 +8,14 @@
 				<table class="table table-hover" >
 					<thead>
     					<tr>
-    					<th >Vnode Adress</th>
-    					<th >Vnode IP/Port</th>
+    					<th style="text-align: center">Vnode IP/Port</th>
     					</tr>
     				</thead>
 					<tbody>
 					{{#with Vnodes}} 
 					  {{#each singlePage}}
 					 <tr>
-	 					<td>{{VnodeProtocolBaseAddr}}</td>
-	 					<td >{{link}}</td>
+	 					<td style="text-align: center">{{link}}</td>
 					 </tr>
 					 {{/each}}
 					{{/with}}
