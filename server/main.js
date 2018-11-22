@@ -6,7 +6,27 @@ import './collections';
 import './SubChainProtocolPool';
 import './VnodeProtocolPool';
 
-const interval = 10000;
+SyncedCron.add({
+    name: 'Sync SubChainProtocol Properties',
+    schedule: function(parser) {
+        // parser is a later.parse object
+        return parser.text('every 15 seconds');
+    },
+    job: function() {
+        SubChainProtocolPool.syncPublicPropertiesFromChain();
+    }
+});
+
+SyncedCron.add({
+    name: 'Sync VnodeProtocol Properties',
+    schedule: function(parser) {
+        // parser is a later.parse object
+        return parser.text('every 15 seconds');
+    },
+    job: function() {
+        VnodeProtocolPool.syncPublicPropertiesFromChain();
+    }
+});
 
 Meteor.startup(() =>{
     if (Meteor.isDevelopment)
@@ -59,6 +79,9 @@ Meteor.startup(() =>{
             });
         }
     }
+
+    SyncedCron.start();
+
 });
 
 Meteor.publish("SubChainProtocolProp", function(){
@@ -80,26 +103,6 @@ Meteor.publish("VnodeProtocolVnode", function(){
     console.log('publish VnodeProtocolVnode');
     return VnodeProtocolVnode.find({});
 });
-
-// Meteor.setInterval(function(){
-//     if(SubChainProtocolPool.isSyncRunning === false)
-//     {
-//         console.log("Start SubChainProtocolPool");
-//         SubChainProtocolPool.syncPublicPropertiesFromChain();
-//     }
-//     else{
-//         console.log("SubChainProtocolPool.syncPublicPropertiesFromChain already ran");
-//     };
-
-//     if(VnodeProtocolPool.isSyncRunning === false)
-//     {
-//         console.log("Start VnodeProtocolPool.syncPublicPropertiesFromChain");
-//         VnodeProtocolPool.syncPublicPropertiesFromChain();
-//     }
-//     else{
-//         console.log("VnodeProtocolPool.syncPublicPropertiesFromChain already ran");
-//     };
-// }, interval);
 
 var getSubChainProtoclBasePublicProperties = function(data) {
     var newData = [];
