@@ -6,12 +6,12 @@ target="exit"
 for i in "$@"
 do
 case $i in
-    -t|--test)
-        message="Delivered to TEST."
+    -tc|--testClient)
+        message="Delivered to TEST Cient UI."
         target="ubuntu@54.202.180.164:/home/ubuntu"
         pem="/Users/ychen/innowells/pem/moacnodes101.pem"
     ;;
-    -p|--prod)
+    -pc|--prodClient)
         message="Delivered to PROD"
         target="ubuntu@52.88.19.78:/home/ubuntu"
         pem="/Users/ychen/innowells/pem/moacpool.pem"
