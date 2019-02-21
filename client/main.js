@@ -12,7 +12,7 @@ Router.route('/', function () {
 Template.home.helpers({
   'getNetworkName': function(){
     var networkName = Meteor.absoluteUrl();
-    if(networkName.indexOf("54.202.180.164")>0 || networkName.indexOf("nodes101")>0){
+    if(networkName.indexOf("34.212.127.173")>0 || networkName.indexOf("nodes101")>0){
       return "TestNet";
     }
     else if(networkName.indexOf("52.88.19.78")>0 || networkName.indexOf("nodes")>0){

@@ -8,7 +8,7 @@ do
 case $i in
     -tc|--testClient)
         message="Delivered to TEST Cient UI."
-        target="ubuntu@54.202.180.164:/home/ubuntu"
+        target="ubuntu@34.212.127.173:/home/ubuntu/moacnodes/client"
         pem="/Users/ychen/innowells/pem/moacnodes101.pem"
     ;;
     -pc|--prodClient)
